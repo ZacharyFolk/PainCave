@@ -74,6 +74,8 @@ function Calendar(props) {
         let ref = firebase.db.ref().child(`users/${authUser.uid}/activities`);
         ref.orderByChild("date").equalTo(queryDate).on("value", snapshot => {
             let data = snapshot.val();
+            console.log(data);
+            console.log(authUser.email)
             setActivities(data);
             setLoading(false);
             // setEditing(false); Add later

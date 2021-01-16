@@ -9,6 +9,7 @@ import {
   useRouteMatch
 } from "react-router-dom";
 
+import gravatar from 'gravatar-api'
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
@@ -28,12 +29,21 @@ import Sidebar from '../components/Sidebar';
 import Copyright from '../components/Copyright';
 
 function Dashboard(props) {
+
   let match = useRouteMatch();
 
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(true);
 
+  const getGrav = (authUser) => {
+    let options = {
+      email: authUser.email,
+      parameters: { "size": "50"}
+    }
+   return gravatar.imageUrl(options);
+  };
+  
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
@@ -63,12 +73,9 @@ function Dashboard(props) {
                     Dashboard
                     </Typography>
                     <IconButton color="inherit">
-                    <Badge badgeContent={4} color="secondary">
                         <Typography component="p" style={{paddingRight: "15px"}}>
-                        username
+                      <img src= {getGrav(authUser)} />
                         </Typography>
-                        <NotificationsIcon />
-                    </Badge>
                     </IconButton>
                 </Toolbar>
                 </AppBar>
