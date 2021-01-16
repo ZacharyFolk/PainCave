@@ -37,7 +37,9 @@ function AddActivity(props) {
         name: '',
         group: 'cardio',
         type: 1,
-        duration: 60,
+        duration: 0,
+        distance: 0,
+        weight: 0,
         date: queryDate
     }
 
@@ -51,11 +53,19 @@ function AddActivity(props) {
             [name]: value});
     }
 
-    const handleSlider = e => {
-        const duration = e.target.getAttribute('aria-valuenow');
-        setActivity({...activity, duration: duration});
+    const handleSlider = (name) => (e, value) => {
+     
+        console.log( name + value);
+        setActivity({
+            ...activity, [name]: value,
+        });
+        // const duration = e.target.getAttribute('aria-valuenow');
+        // setActivity({...activity, duration: duration});
     }
-
+    const handleWeightSlider = e => {
+        const weight = e.target.getAttribute('aria-valuenow');
+        setActivity({...activity, weight: weight});
+    }
     const isValid = activity.name === '';
 
     // Add the activity to firebase via the API made in this app
@@ -71,28 +81,8 @@ function AddActivity(props) {
             }, 3000)
         }
     }
-    
-    const handleRadioChange = (event) => {
-       //   setSelectedValue(event.target.value);
-        }
 
-    // const GreenRadio = withStyles({
-    //     root: {
-    //       color: green[400],
-    //       '&$checked': {
-    //         color: green[600],
-    //       },
-    //     },
-    //     checked: {},
-    //   })((props) => <Radio color="default" {...props} />);
-      
-    //   export default function RadioButtons() {
-    //     const [selectedValue, setSelectedValue] = React.useState('a');
-      
-    //     const handleRadioChange = (event) => {
-    //       setSelectedValue(event.target.value);
-    //     };
-
+  
     return (
         <form noValidate onSubmit={e => e.preventDefault()}>
             <FormControl className={classes.formControl}>
@@ -113,17 +103,7 @@ function AddActivity(props) {
                     </Typography>
 
                    <RadioButtonsGroup />
-                   
-                    <Select
-                        value={activity.group}
-                        style={{minWidth: '100%'}}
-                        name="group"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={'cardio'}>Cardio</MenuItem>
-                        <MenuItem value={'body'}>Body</MenuItem>
-                        <MenuItem value={'weights'}>Weights</MenuItem>
-                    </Select>
+
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
@@ -141,7 +121,7 @@ function AddActivity(props) {
                     Duration
                 </Typography>
                 <Slider
-                    defaultValue={activity.duration}
+                    value={activity.duration}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
                     step={10}
@@ -149,7 +129,33 @@ function AddActivity(props) {
                     min={10}
                     max={120}
                     name="duration"
-                    onChange={handleSlider}
+                    onChange={handleSlider('duration')}
+                    style={{marginBottom: '20px'}}
+                />
+                <TextField
+                    style={{marginTop: '5px'}}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Distance"
+                    value={activity.distance}
+                    name="distance"
+                    onChange={handleChange}
+                />
+                <Typography id="discrete-slider" gutterBottom>
+                    Weight
+                </Typography>
+                  <Slider
+                    value={activity.weight}
+                    aria-labelledby="discrete-slider"
+                    valueLabelDisplay="auto"
+                    step={5}
+                    marks
+                    min={0}
+                    max={300}
+                    name="weight"
+                    onChange={handleSlider('weight')}
                     style={{marginBottom: '20px'}}
                 />
             </FormControl>
