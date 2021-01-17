@@ -73,9 +73,12 @@ function Dashboard(props) {
                     Dashboard
                     </Typography>
                     <IconButton color="inherit">
+                    <Badge badgeContent={4} color="secondary">
                         <Typography component="p" style={{paddingRight: "15px"}}>
                       <img src= {getGrav(authUser)} />
                         </Typography>
+                        <NotificationsIcon />
+                    </Badge>
                     </IconButton>
                 </Toolbar>
                 </AppBar>

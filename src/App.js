@@ -12,6 +12,7 @@ import theme from './config/theme.config';
 import Dashboard from './pages/Dashboard';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import Exercise from './pages/Exercise';
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route path="/dashboard">
             <Dashboard />
+          </Route>
+          <Route path="/exercise">
+            <Exercise />
           </Route>
         </Switch>
       </ThemeProvider>

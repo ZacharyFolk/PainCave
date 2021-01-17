@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.hana {
+  font-family: 'Hanalei Fill', cursive;
+}
+
+.super-big {
+  font-size: 4em;
+  background: linear-gradient(180deg, #dbdbdb, #8b8b8b);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #000000;
+}
+
+.title-box {
+  background-image: url('./media/images/cave.gif');
+}

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { withFirebase } from '../Firebase';
-
 import { makeStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
@@ -10,7 +8,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
-import RadioButtonsGroup from './radios'
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+
+var ExerData = [
+    {name: 'Lat Pulldown', type: 'weights'},
+    {name: 'Bike', type: 'cardio'},
+    {name: 'Sit Ups', type: 'body'}
+]
+
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -20,6 +28,26 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(2),
     },
 }));
+
+function RadioButtonsGroup() {
+    var filteredData;
+    const [value, setValue] = React.useState('cardio');
+    const handleRadioChange = (event) => {
+        setValue(event.target.value);
+    };
+  
+    return (
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Types</FormLabel>
+        <RadioGroup aria-label="group" name="group" value={value} onChange={handleRadioChange}>
+          <FormControlLabel value="cardio" control={<Radio />} label="Cardio 🚴" />
+          <FormControlLabel value="body" control={<Radio />} label="Body 🤸‍♂️" />
+          <FormControlLabel value="weights" control={<Radio />} label="Weights 🏋️" />
+        </RadioGroup>
+      </FormControl>
+    );
+  }
+
 
 
 function AddActivity(props) {
@@ -43,6 +71,8 @@ function AddActivity(props) {
         date: queryDate
     }
 
+
+
     const [activity, setActivity] = useState(defaultActivity);
 
     const handleChange = e => {
@@ -54,14 +84,13 @@ function AddActivity(props) {
     }
 
     const handleSlider = (name) => (e, value) => {
-     
-        console.log( name + value);
         setActivity({
             ...activity, [name]: value,
         });
         // const duration = e.target.getAttribute('aria-valuenow');
         // setActivity({...activity, duration: duration});
     }
+
     const handleWeightSlider = e => {
         const weight = e.target.getAttribute('aria-valuenow');
         setActivity({...activity, weight: weight});
@@ -82,7 +111,22 @@ function AddActivity(props) {
         }
     }
 
-  
+    const ExerciseSelect = () => {
+        return (
+            <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={activity.type}
+            style={{minWidth: '100%'}}
+            name="type"
+            onChange={handleChange}
+        >
+            <MenuItem value={1}>Lifting Weights</MenuItem>
+            <MenuItem value={2}>Running</MenuItem>
+            <MenuItem value={3}>Cycling</MenuItem>
+        </Select>
+        );
+    }
     return (
         <form noValidate onSubmit={e => e.preventDefault()}>
             <FormControl className={classes.formControl}>
@@ -104,18 +148,10 @@ function AddActivity(props) {
 
                    <RadioButtonsGroup />
 
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={activity.type}
-                        style={{minWidth: '100%'}}
-                        name="type"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={1}>Lifting Weights</MenuItem>
-                        <MenuItem value={2}>Running</MenuItem>
-                        <MenuItem value={3}>Cycling</MenuItem>
-                    </Select>
+                   <ExerciseSelect />
+
+               
+                    
                 </div>
                 <Typography id="discrete-slider" gutterBottom>
                     Duration

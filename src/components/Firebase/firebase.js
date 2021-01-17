@@ -36,11 +36,6 @@ class Firebase {
         const ref = this.db.ref().child(`users/${uid}/activities/${activityKey}`);
         ref.update(activity);
     }
-
-    getUserInfo = (email) => {
-        return this.auth.email
-    }
-
 }
 
 export default Firebase;
