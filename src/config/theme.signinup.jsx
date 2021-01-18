@@ -14,6 +14,9 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         margin: theme.spacing(8, 4),
+        [theme.breakpoints.down('md')]: {
+            margin: theme.spacing(8, 0)
+        },
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

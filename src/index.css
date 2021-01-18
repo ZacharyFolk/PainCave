@@ -30,3 +30,9 @@ code {
 .title-box {
   background-image: url('./media/images/cave.gif');
 }
+.sign-in-meta { 
+  background-color:  rgba(0, 0, 0, 0.8);
+  padding: 1em;
+}
+a:link, a:visited {color: #949494; }
+a:hover {color: #e0e0e0; }

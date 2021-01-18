@@ -21,7 +21,6 @@ import Container from '@material-ui/core/Container';
 function buildExercise (props) {
 
 
-
     return (
         <AuthUserContext.Consumer>
                {

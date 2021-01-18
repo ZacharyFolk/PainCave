@@ -5,12 +5,12 @@ const theme = createMuiTheme({
     fontFamily: 'Nanum Gothic',
   },
   palette: {
-      // primary: {
-      //   main: '#313131'
-      // },
-      // secondary: {
-      //   main: '#8ec5fc',
-      // }
+      primary: {
+        main: '#fff'
+      },
+      secondary: {
+        main: '#8ec5fc',
+      },
       type: 'dark',
   },
 });
