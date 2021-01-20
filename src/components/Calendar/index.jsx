@@ -7,7 +7,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import CalendarBody from './calendar-body';
 import CalendarHead from './calendar-head';
-
 import AddActivity from '../AddActivity';
 import EditActivity from '../EditActivity';
 import ActivityList from '../ActivityList';

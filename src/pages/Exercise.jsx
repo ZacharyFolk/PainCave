@@ -14,34 +14,22 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
+import Header from '../components/Header'
 import Container from '@material-ui/core/Container';
-
-
+import Exercise from '../components/Exercise'
+import AddExercise from '../components/AddExercise'
 function buildExercise (props) {
-
-
     return (
         <AuthUserContext.Consumer>
                {
         authUser => authUser ? (
             <div>
                 <CssBaseline />
-                <Toolbar >
-          
-                    <Typography component="h1" variant="h6" color="inherit" noWrap >
-                    Dashboard
-                    </Typography>
-         
-                </Toolbar>
-
-         
-
-                <div />
-                <Container maxWidth="xl" >
-               <h1>derp</h1>
-                </Container>
-                
+                <Header />
+                <Exercise
+                firebase={props.firebase}
+                authUser={authUser}
+                />
             </div>
             ) : (
             <p>Not authorized.</p>
