@@ -65,9 +65,8 @@ function AddExercise(props) {
     const handleSubmit = () => {
         if (authUser) {
             firebase.addExercise(uid, exercise);
-            setExercise(defaultExercise);
+            setExercise({name: '', group:exercise.group });
             console.log('openSnack');
-            setOpenSnackbar(true);
             setSnackbarMsg('Added exercise');
             setTimeout(() => {
                 setOpenSnackbar(false)

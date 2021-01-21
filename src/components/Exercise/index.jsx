@@ -18,8 +18,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import AddExercise from '../AddExercise';
-
+import ExerciseList from '../ExerciseList';
 import useStyles from '../../config/theme.exercise';
+import Modal from '@material-ui/core/Modal';
 
 function Exercise(props) {
   const classes = useStyles();
@@ -27,7 +28,8 @@ function Exercise(props) {
   const uid = authUser.uid;
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState(null);
-
+  const [exercises, setExercises] = useState(true);
+  const [loading, setLoading] = useState([]);
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -39,6 +41,15 @@ function Exercise(props) {
         setOpenSnackbar={setOpenSnackbar}
          setSnackbarMsg={setSnackbarMsg}
         />
+        <ExerciseList
+                  loading={loading}
+                  exercises={exercises}
+                  authUser={props.authUser}
+                    // setOpenSnackbar={setOpenSnackbar}
+                    // setSnackbarMsg={setSnackbarMsg}
+                    //editExercise={editExercise}
+                   // setEditing={setEditing}
+                />
         </div>
       </Grid>
     </Grid>

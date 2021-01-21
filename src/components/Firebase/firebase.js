@@ -27,6 +27,7 @@ class Firebase {
     user = uid => this.db.ref(`users/${uid}`);
     users = () => this.db.ref('users');
 
+
     addActivity = (uid, activity) => {
         const ref = this.db.ref().child(`users/${uid}/activities`);
         ref.push(activity);
@@ -38,8 +39,10 @@ class Firebase {
     }
 
     addExercise = (uid, exercise) => {
-        const ref = this.db.ref().child(`users/${uid}/exercises`);
-        ref.push(exercise);
+        // todo : prevent duplicate by name
+        console.log(exercise.group);
+        const ref = this.db.ref().child(`users/${uid}/exercises/groups/${exercise.group}/`);
+        ref.push(exercise.name);
     };
 
 }
