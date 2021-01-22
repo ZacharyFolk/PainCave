@@ -40,7 +40,6 @@ class Firebase {
 
     addExercise = (uid, exercise) => {
         // todo : prevent duplicate by name
-        console.log(exercise.group);
         const ref = this.db.ref().child(`users/${uid}/exercises/groups/${exercise.group}/`);
         ref.push(exercise.name);
     };

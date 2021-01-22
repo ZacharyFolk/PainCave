@@ -21,6 +21,7 @@ import AddExercise from '../AddExercise';
 import ExerciseList from '../ExerciseList';
 import useStyles from '../../config/theme.exercise';
 import Modal from '@material-ui/core/Modal';
+import ExerciseSelect from '../ExerciseSelect';
 
 function Exercise(props) {
   const classes = useStyles();
@@ -39,7 +40,11 @@ function Exercise(props) {
         <AddExercise 
         authUser={props.authUser}
         setOpenSnackbar={setOpenSnackbar}
-         setSnackbarMsg={setSnackbarMsg}
+        setSnackbarMsg={setSnackbarMsg}
+        />
+        <ExerciseSelect
+          exercises={exercises}
+          authUser={props.authUser}
         />
         <ExerciseList
                   loading={loading}

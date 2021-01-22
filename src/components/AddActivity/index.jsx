@@ -13,12 +13,6 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 
-var ExerData = [
-    {name: 'Lat Pulldown', type: 'weights'},
-    {name: 'Bike', type: 'cardio'},
-    {name: 'Sit Ups', type: 'body'}
-]
-
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -29,12 +23,27 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function RadioButtonsGroup() {
-    var filteredData;
+function RadioButtonsGroup(props) {
+    const {authUser, firebase} = props;
     const [value, setValue] = React.useState('cardio');
+    
+    console.log("What is this? " + value);
+
+
     const handleRadioChange = (event) => {
         setValue(event.target.value);
+     //   CreateExerciseSelect();
     };
+
+    function CreateExerciseSelect() {
+        console.log('VALUE ' + value)
+        let ref = firebase.db.ref().child(`users/${authUser.uid}/exercises/groups/weights/`);
+        ref.on("value", function(snapshot) {
+            console.log(snapshot.val());
+          }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+          });
+    }
   
     return (
       <FormControl component="fieldset">
@@ -146,7 +155,9 @@ function AddActivity(props) {
                         Type
                     </Typography>
 
-                   <RadioButtonsGroup />
+                   <RadioButtonsGroup 
+                     authUser={props.authUser}
+                   />
 
                    <ExerciseSelect />
 

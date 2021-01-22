@@ -97,7 +97,7 @@ function Calendar(props) {
                 : obj.date.slice(0,4)
             });
     
-            console.log(arr);
+
             setActiveDays(arr);
         }
         });

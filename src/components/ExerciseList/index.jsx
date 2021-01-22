@@ -13,8 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 function ExerciseList(props) {
-        const {firebase, authUser} = props;
-
+    const {firebase, authUser} = props;
     const {loading, exercises} = props;
     // let ref = firebase.db.ref().child(`users/${authUser.uid}/exercises`);
 
@@ -26,18 +25,25 @@ function ExerciseList(props) {
     //     }
     // })
 
-    const fetchExercise = (ex) => {
-
+    const fetchExercise = (exercises) => {
         console.log('click');
 
-        console.log(ex);
-    let ref = firebase.db.ref('exercises');
-    console.log(ref);
-    ref.orderByChild("group").on("child_added", function(snapshot) {
-        console.log(snapshot.key + " was " + snapshot.val().group + " meters tall");
-      });    
-        
+        const retrieveData = () => {
+            let ref = firebase.db.ref().child(`users/${authUser.uid}/exercises/groups/weights/`);
+            ref.on("value", function(snapshot) {
+                console.log(snapshot.val());
+              }, function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+              });
+         
+
+        };
+
+        retrieveData();
+
+
     }
+
     const deleteExercise = (i) => {
        const exerciseKey = Object.keys(exercises)[i];
        // Connect to our firebase API
@@ -86,10 +92,13 @@ function ExerciseList(props) {
                             </TableHead>
                             <TableBody>
                             {
+    
                                 Object.values(exercises).map((exercise, i) => {
                                     let {name, group} = exercise;
-                                    {    console.log('Exercise List');
-                                    console.log(exercise);}
+                                    {    
+                                        console.log('Exercise List');
+                                        console.log(exercise.name);
+                                    }
 
                                     return (
                                         <TableRow key={i}>

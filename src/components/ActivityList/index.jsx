@@ -14,6 +14,8 @@ import EditIcon from '@material-ui/icons/Edit';
 function ActivityList(props) {
     const {loading, activities, editActivity,setOpenSnackbar, setSnackbarMsg, setEditing} = props;
 
+console.log('ACTIVITIES');
+    console.log(activities);
     const deleteActivity = (i) => {
         // Get key of activity in firebase
        const activityKey = Object.keys(activities)[i];
@@ -64,6 +66,8 @@ function ActivityList(props) {
                             {
                                 Object.values(activities).map((activity, i) => {
                                     let {name, type, duration} = activity;
+
+                          
                                     switch(activity.type) {
                                         case 1:
                                             type = "Lifting weights";
