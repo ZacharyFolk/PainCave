@@ -1,66 +1,94 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { withFirebase } from '../Firebase';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
-import { MenuItem } from '@material-ui/core';
+import { Button, MenuItem } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
-
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import DateFnsUtils from '@date-io/date-fns'; // choose your lib
+import {   DatePicker,
+    TimePicker,
+    DateTimePicker,
+    MuiPickersUtilsProvider,
+ } from "@material-ui/pickers";
 function AddActivitySelect(props) {
-    const {firebase, authUser} = props;
-    const [value, setValue] = React.useState('cardio');
+
+    const {firebase, authUser, drawer} = props;
+    const [value, setValue] = React.useState('');
+    const [enabled, setEnabled ] = React.useState( false );
+    const [options, setOptions] = React.useState([]);
+    const [exerciseName, setExercise ] =  React.useState('');
+    const [selectedDate, handleDateChange] = useState(new Date());
+    const optionArray = [];
+
+
+    function handleChange(e){
+        const { name, value } = e.target;
+        setExercise(value);
+        console.log( name + value)
+    }
 
     const handleRadioChange = (e) => {
         const { name, value } = e.target;
-        console.log(name + ' ' + value);
-        setValue(value);
-        createSelect(value);
-    };
 
-    const handleDropdownChange = (e) => {
-        this.setState({ selected: e.target.value, name: e.target.name});
-        const { name, value } = e.target
+        setValue(value); 
+        fetchOptions(value);
+    
+        };
+    
+    function fetchOptions(value) {
+        let ref = firebase.db.ref().child(`users/${authUser.uid}/exercises/groups/${value}/`);
+        var exerciseArray = []
+        ref.on("value", snapshot => {
+            if (snapshot && snapshot.exists()){
+                snapshot.forEach(data => {
+                    const dataVal = data.val()
+       
+                  //  exerciseArray.push(<option key={data.key} value={data.key}> { dataVal} </option>)
 
-        console.log( value)
+                  exerciseArray.push(<option key={data.key} value={dataVal}> { dataVal} </option>)
+                })
+                setOptions(exerciseArray);
+            }})
     }
 
-    function createSelect(value) {
-        console.log('VALUE is passed to function : ' + value)
-        function renderOptions(){
-            let ref = firebase.db.ref().child(`users/${authUser.uid}/exercises/groups/${value}/`);
-            ref.on("value", function(snapshot) {
-                console.log(snapshot.val())
-                return (
-                    <MenuItem
-                    label = "Select Exercise"
-                    value={snapshot.val()}
-                    name={snapshot.val()}
-                    />
-                )
 
-              }, function (errorObject) {
-                console.log("The read failed: " + errorObject.code);
-              });
-        }renderOptions();
-      
-        return (
-            <div>
-                <Select
-                onChange={handleDropdownChange}>
-                    {renderOptions()}
-                </Select>
-            </div>
-        )
+    function test(){
+        console.log(exerciseName)
         
+    }
 
-    };
+    function renderSwitch( value ) {
+        console.log('THIS IS THE VALUE : ' + value )
+        switch(value){
+            case 'cardio':
+                return <p>THIS IS CARDIO</p>;
+            case 'body':
+                return <p>THIS IS BODY</p>;
+            case 'weights':
+                return <p>THIS IS WEIGHTS</p>
+            default: 
+            return <p>Choose a group</p>
+        }
+    }
+ 
+
+    function getCardioComps(){
+
+    }
+
+    function getBodyComps(){
+
+    }
+
+    function getWeightsComps(){
+
+    }
 
     function RadioButtonsGroup() {
         return (
-        <FormControl component="fieldset">
-        <FormLabel component="legend">Types</FormLabel>
             <RadioGroup 
                 aria-label="group"
                 name="group" 
@@ -87,15 +115,36 @@ function AddActivitySelect(props) {
                 label="Weights 🏋️" 
             />
             </RadioGroup>
-        </FormControl>
+          
         );
     }
+
+
     return (
+        <>
         <form noValidate onSubmit={(e) => e.preventDefault()}>
             <FormControl>
                 <RadioButtonsGroup />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <DatePicker value={selectedDate} onChange={handleDateChange} />
+      <TimePicker value={selectedDate} onChange={handleDateChange} />
+      <DateTimePicker value={selectedDate} onChange={handleDateChange} />
+    </MuiPickersUtilsProvider>
+                <>
+             <AddCircleIcon
+             onClick={test}
+             />
+             </>
+              <select onChange={handleChange}>
+                  {options}
+              </select>
             </FormControl>
         </form>
+        <div>
+            { renderSwitch(value)}
+
+        </div>
+        </>
     );  
 }
 

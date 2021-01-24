@@ -9,21 +9,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 function ExerciseList(props) {
     const {firebase, authUser} = props;
     const {loading, exercises} = props;
-    // let ref = firebase.db.ref().child(`users/${authUser.uid}/exercises`);
 
-    // ref.on("value", snapshot => {
-    //     let data = snapshot.val();
-    //     if (data) {
-    //     const values = Object.values(data);
-    //     console.log(values);
-    //     }
-    // })
 
     const fetchExercise = (exercises) => {
         console.log('click');

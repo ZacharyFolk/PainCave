@@ -9,7 +9,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { ClickAwayListener } from '@material-ui/core';
 
 const CalendarBody = props => {
 
@@ -27,10 +26,10 @@ const CalendarBody = props => {
         let currDay, selectDay, activeDay;
 
         // Check if day is today
-        if (currentDay() == d && currentMonth() == actualMonth()) currDay = "today";
+        if (currentDay() === d && currentMonth() === actualMonth()) currDay = "today";
 
         // Check if day is selected day
-        if (selectedDay.day == d && currentMonthNum() == selectedDay.month ) selectDay = "selected-day";
+        if (selectedDay.day === d && currentMonthNum() === selectedDay.month ) selectDay = "selected-day";
         
         // Check if day found in this month active days
         let formattedDate = `${d}-${currentMonthNum()}`;

@@ -2,13 +2,6 @@ import React from 'react';
 
 import { AuthUserContext, withAuthentication } from '../components/Session';
 import { withRouter } from 'react-router-dom';
-
-import {
-  Switch,
-  Route,
-  useRouteMatch
-} from "react-router-dom";
-
 import gravatar from 'gravatar-api'
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -30,7 +23,6 @@ import Copyright from '../components/Copyright';
 
 function Dashboard(props) {
 
-  let match = useRouteMatch();
 
   const classes = useStyles();
 
