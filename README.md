@@ -37,3 +37,21 @@
 * User should be able to go to archives page
 * Archives should have a calendar with all days with a workout highlighted and able to be clicked
 * Clicking highlight calendar day shows the exercises from that workout
+
+> Resources
+* https://console.firebase.google.com/project/workout-tracker-ceb51/database/workout-tracker-ceb51-default-rtdb/data
+* https://material-ui-pickers.dev/getting-started/installation
+* https://date-fns.org/ or https://momentjs.com/ ? 
+* https://material-ui.com/
+* http://jquense.github.io/react-big-calendar/examples/index.html#basic ,#rendering
+* https://stackoverflow.com/a/46428629/82330 => Finally helped me understand how to pass function reference from parent to pass value from child->parent
+* https://codesandbox.io/
+* https://gazielle.itch.io/pixel-caves
+* https://material-ui.com/customization/theming/#theme-provider
+* https://www.robinwieruch.de/react-usestate-hook
+* https://www.youtube.com/watch?app=desktop&v=LJ5OY_rfrvU&ab_channel=PXLFLX
+* https://vertibirdo.tumblr.com/image/162349425593
+* https://www.patreon.com/posts/fire-tutorial-7293859
+* https://www.patreon.com/posts/rock-formations-9856719
+* https://www.pinterest.com/pin/361836151311168309/
+* https://www.pinterest.com/pin/347058715029947262/

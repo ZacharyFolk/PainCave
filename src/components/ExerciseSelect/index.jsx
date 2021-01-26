@@ -1,28 +1,39 @@
 import React, { Fragment, useState } from 'react';
 import { withFirebase } from '../Firebase';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import { Button, MenuItem } from '@material-ui/core';
-import Select from '@material-ui/core/Select';
+import Slider from '@material-ui/core/Slider';
+import { ThemeProvider , createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
-import {   DatePicker,
-    TimePicker,
-    DateTimePicker,
-    MuiPickersUtilsProvider,
- } from "@material-ui/pickers";
-function AddActivitySelect(props) {
+import {   DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import WeightSlider from '../forms/WeightSlider'
+import RadioButtonsGroup from '../forms/Radios'
+import DurationSlider from '../forms/DurationSlider'
 
+function AddActivitySelect(props) {
     const {firebase, authUser, drawer} = props;
     const [value, setValue] = React.useState('');
-    const [enabled, setEnabled ] = React.useState( false );
-    const [options, setOptions] = React.useState([]);
     const [exerciseName, setExercise ] =  React.useState('');
     const [selectedDate, handleDateChange] = useState(new Date());
-    const optionArray = [];
+    
+    const defaultActivity = {
+        name: '',
+        group: '',
+        type: 1,
+        duration: 0,
+        distance: 0,
+        weight: 0,
+        date: selectedDate
+    }
+  
+    const [options, setOptions] = React.useState([]);
 
+    const [activity, setActivity] = useState(defaultActivity);
+
+    const onDataChanged = (value) => {
+        console.log(value);
+    }
 
     function handleChange(e){
         const { name, value } = e.target;
@@ -32,10 +43,8 @@ function AddActivitySelect(props) {
 
     const handleRadioChange = (e) => {
         const { name, value } = e.target;
-
         setValue(value); 
         fetchOptions(value);
-    
         };
     
     function fetchOptions(value) {
@@ -44,10 +53,7 @@ function AddActivitySelect(props) {
         ref.on("value", snapshot => {
             if (snapshot && snapshot.exists()){
                 snapshot.forEach(data => {
-                    const dataVal = data.val()
-       
-                  //  exerciseArray.push(<option key={data.key} value={data.key}> { dataVal} </option>)
-
+                  const dataVal = data.val()
                   exerciseArray.push(<option key={data.key} value={dataVal}> { dataVal} </option>)
                 })
                 setOptions(exerciseArray);
@@ -56,94 +62,61 @@ function AddActivitySelect(props) {
 
 
     function test(){
-        console.log(exerciseName)
-        
+        console.log(activity)
+       
     }
 
-    function renderSwitch( value ) {
-        console.log('THIS IS THE VALUE : ' + value )
-        switch(value){
+    function RenderSwitch( value ) {
+        switch(value.value){
             case 'cardio':
-                return <p>THIS IS CARDIO</p>;
+                return <DurationSlider 
+                activity={activity}
+                onDataChanged={onDataChanged} />;
             case 'body':
-                return <p>THIS IS BODY</p>;
+              // showContent(true)
             case 'weights':
-                return <p>THIS IS WEIGHTS</p>
+                return <WeightSlider 
+                activity={activity}
+                onDataChanged={onDataChanged} />;
             default: 
             return <p>Choose a group</p>
         }
     }
  
 
-    function getCardioComps(){
-
-    }
-
-    function getBodyComps(){
-
-    }
-
-    function getWeightsComps(){
-
-    }
-
-    function RadioButtonsGroup() {
-        return (
-            <RadioGroup 
-                aria-label="group"
-                name="group" 
-                value={value} 
-                onChange={handleRadioChange} 
-                row
-            >
-            <FormControlLabel  
-                name="group" 
-                value="cardio" 
-                control={<Radio />} 
-                label="Cardio 🚴" 
-            />
-            <FormControlLabel  
-                name="group" 
-                value="body" 
-                control={<Radio />} 
-                label="Body 🤸‍♂️"
-            />
-            <FormControlLabel 
-                name="group" 
-                value="weights" 
-                control={<Radio />} 
-                label="Weights 🏋️" 
-            />
-            </RadioGroup>
-          
-        );
-    }
-
 
     return (
         <>
         <form noValidate onSubmit={(e) => e.preventDefault()}>
             <FormControl>
-                <RadioButtonsGroup />
+
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <DatePicker value={selectedDate} onChange={handleDateChange} />
-      <TimePicker value={selectedDate} onChange={handleDateChange} />
-      <DateTimePicker value={selectedDate} onChange={handleDateChange} />
-    </MuiPickersUtilsProvider>
-                <>
-             <AddCircleIcon
-             onClick={test}
-             />
-             </>
+                    <DatePicker value={selectedDate} onChange={handleDateChange} />
+                </MuiPickersUtilsProvider>
+
+                <RadioButtonsGroup
+                value={value} 
+                handleRadioChange={handleRadioChange} />
+
+        
+
               <select onChange={handleChange}>
                   {options}
               </select>
+
+              <RenderSwitch value={value} />
+
+<AddCircleIcon
+onClick={test}
+/>
+
+
+
+
+ 
             </FormControl>
         </form>
-        <div>
-            { renderSwitch(value)}
-
-        </div>
+    
         </>
     );  
 }
