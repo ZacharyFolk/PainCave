@@ -2,8 +2,8 @@ import React from 'react';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 
-const DurationSlider = (props) => {
-    const [value, setValue] = React.useState();
+const WorkoutSlider = (props) => {
+    const [value, setValue] = React.useState(30);
     const handleChange = (event, newValue) => {
       setValue(newValue);
       props.onDataChanged(value);
@@ -11,7 +11,7 @@ const DurationSlider = (props) => {
     return (
     <React.Fragment>
         <Typography id="discrete-slider" gutterBottom>
-             Duration
+            { props.name }
         </Typography>        
         <Slider
             value={value}
@@ -20,8 +20,8 @@ const DurationSlider = (props) => {
             step={5}
             marks
             min={0}
-            max={300}
-            name="duration"
+            max={ props.max }
+            name={ props.name }
             onChange={handleChange}
             style={{marginBottom: '20px'}}
         />
@@ -29,4 +29,4 @@ const DurationSlider = (props) => {
     )
 }
 
-export default DurationSlider;
+export default WorkoutSlider;

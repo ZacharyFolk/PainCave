@@ -7,9 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 import {   DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import WeightSlider from '../forms/WeightSlider'
 import RadioButtonsGroup from '../forms/Radios'
-import DurationSlider from '../forms/DurationSlider'
+import WorkoutSlider from '../forms/WorkoutSlider'
+import { Work } from '@material-ui/icons';
 
 function AddActivitySelect(props) {
     const {firebase, authUser, drawer} = props;
@@ -24,7 +24,7 @@ function AddActivitySelect(props) {
         duration: 0,
         distance: 0,
         weight: 0,
-        date: selectedDate
+        date: selectedDate,
     }
   
     const [options, setOptions] = React.useState([]);
@@ -69,15 +69,23 @@ function AddActivitySelect(props) {
     function RenderSwitch( value ) {
         switch(value.value){
             case 'cardio':
-                return <DurationSlider 
+                return <WorkoutSlider
                 activity={activity}
-                onDataChanged={onDataChanged} />;
+                onDataChanged={onDataChanged}
+                step={10}
+                max={50}
+                name="Duration"
+                />;
             case 'body':
-              // showContent(true)
+                // add reps and sets
             case 'weights':
-                return <WeightSlider 
+                return <WorkoutSlider
                 activity={activity}
-                onDataChanged={onDataChanged} />;
+                onDataChanged={onDataChanged}
+                step={5}
+                max={350}
+                name="Weights"
+                />;
             default: 
             return <p>Choose a group</p>
         }
