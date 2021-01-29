@@ -3,13 +3,13 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-const RadioButtonsGroup = ({value, handleRadioChange}) => {
+const RadioButtonsGroup = ( props ) => {
     return (
         <RadioGroup 
             aria-label="group"
             name="group" 
-            value={value} 
-            onChange={handleRadioChange} 
+            value={props.value} 
+            onChange={props.handleRadioChange} 
             row
         >
         <FormControlLabel  

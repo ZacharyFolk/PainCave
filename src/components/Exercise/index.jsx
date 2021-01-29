@@ -13,8 +13,22 @@ import Drawer from '@material-ui/core/Drawer';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import WorkoutBoard from '../WorkoutBoard';
 
 function Exercise(props) {
+  const [selectedDate, handleDateChange] = useState(new Date());
+  const defaultActivity = {
+    name: '',
+    group: '',
+    date: selectedDate,
+    distance: 0,
+    duration: 0,
+    reps: 0,
+    sets: 0,
+    type: 1,
+    weight: 0,
+}
+
   const classes = useStyles();
   const {authUser, firebase} = props;
   const uid = authUser.uid;
@@ -23,7 +37,15 @@ function Exercise(props) {
   const [exercises, setExercises] = useState(true);
   const [loading, setLoading] = useState([]);
   const [drawer, setDrawerState] = useState(false);
+  const [activity, setActivity] = useState(defaultActivity);
 
+  const onDataChanged = (name, value) => {
+    setActivity({
+        ...activity, [name]: value,
+    }); 
+    // console.log(event.target.value)  
+    // setSliderValue(value);
+}
   function handleDrawerToggle(){
     setDrawerState(!drawer)
   }
@@ -31,7 +53,12 @@ function Exercise(props) {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={false} sm={4} md={7}>
+
+      <WorkoutBoard 
+        activity={activity} 
+      />
+      </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
     
@@ -44,6 +71,14 @@ function Exercise(props) {
         <ExerciseSelect
           exercises={exercises}
           authUser={props.authUser}
+          activity={activity}
+          defaultActivity={defaultActivity}
+          setActivity={setActivity}
+          selectedDate={selectedDate}
+          handleDateChange={handleDateChange}
+          onDataChanged={onDataChanged}
+          // setSliderValue={setSliderValue}
+          // sliderValue={sliderValue}
         />
         <Drawer anchor='right' open={drawer} >
         <AddExercise 
