@@ -6,9 +6,15 @@ const WorkoutSlider = (props) => {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
       setValue(newValue);
-    //   console.log('newValue : ' + newValue);
-     // props.onDataChanged(props.name.toLowerCase(), newValue);
     };
+
+    function setObject(){
+
+        props.setActivity({
+            ...props.activity,
+            [props.name]: value
+        })
+    }
     return (
     <React.Fragment>
         <Typography id="discrete-slider" gutterBottom>
@@ -24,7 +30,7 @@ const WorkoutSlider = (props) => {
             max={ props.max }
             name={ props.name }
             onChange={handleChange}
-           // onChangeCommitted={setThatBitch}
+            onChangeCommitted={setObject}
             style={{marginBottom: '20px'}}
         />
     </React.Fragment>

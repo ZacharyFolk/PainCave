@@ -14,9 +14,9 @@ import Typography from '@material-ui/core/Typography';
 
 import useStyles from '../config/theme.signinup';
 import Copyright from '../components/Copyright';
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 
 function SignUp(props) {
-  const classes = useStyles();
 
   const initialUser = {id: null, name: '', email: '', password: '', error: null, auth: null}
 
@@ -51,19 +51,16 @@ function SignUp(props) {
   const isValid = user.name === '' || user.email === '' || user.password === '';
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
+    <Grid container component="main">
+
+      <Grid item xs={12} sm={8} md={5}  elevation={6} square>
+        <div>
+
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
           <form 
-            className={classes.form} 
+       
             noValidate
             onSubmit={e => e.preventDefault()}
           >
@@ -103,7 +100,7 @@ function SignUp(props) {
               autoComplete="current-password"
               onChange={handleChange}
             />
-            <Typography className={classes.error}>
+            <Typography>
               {user.error ? user.error : ''}
             </Typography>
             <Button
@@ -111,7 +108,7 @@ function SignUp(props) {
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
+            
               onClick={handleSubmit}
               disabled={isValid}
             >

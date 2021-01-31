@@ -39,10 +39,15 @@ function Exercise(props) {
   const [drawer, setDrawerState] = useState(false);
   const [activity, setActivity] = useState(defaultActivity);
 
+  const [ values, buildPlan ] = useState(defaultActivity);
+
   const onDataChanged = (name, value) => {
-    setActivity({
-        ...activity, [name]: value,
-    }); 
+    console.log('YOU DID SOMETHING')
+    console.log(name + ':' + value);
+    // activity[name] = value;
+    console.log(defaultActivity);
+    console.log(activity);
+
     // console.log(event.target.value)  
     // setSliderValue(value);
 }

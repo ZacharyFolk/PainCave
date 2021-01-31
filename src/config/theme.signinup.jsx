@@ -1,14 +1,18 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
+    /*     backgroundColor:
+    theme.palette.type === 'dark' ? theme.palette.grey[900] : theme.palette.grey[50], */
+    body: {
+        backgroundColor: "#f4f2aa"
+    },
     root: {
         height: '100vh',
     },
     image: {
-        backgroundImage: 'url(https://source.unsplash.com/collection/8172461/1500xauto)',
+
         backgroundRepeat: 'no-repeat',
-        backgroundColor:
-        theme.palette.type === 'dark' ? theme.palette.grey[900] : theme.palette.grey[50],
+        backgroundColor: '#f4f2aa',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
     },

@@ -55,3 +55,12 @@
 * https://www.patreon.com/posts/rock-formations-9856719
 * https://www.pinterest.com/pin/361836151311168309/
 * https://www.pinterest.com/pin/347058715029947262/
+
+
+> Visual Studio
+> CTRL + SHIFT + P => settings => Preferences : Open user settings
+> "format on save"
+
+> => settings => terminal.integrated.shell.windows
+>             => brower-preview.startUrl 
+
