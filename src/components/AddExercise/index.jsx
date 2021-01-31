@@ -18,36 +18,34 @@ import FormLabel from "@material-ui/core/FormLabel";
 //   } from "@material-ui/core";
 
 function AddExercise(props) {
-  const useStyles = makeStyles((theme) => ({
-    formControl: {
-      minWidth: "100%",
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  }));
-
-  const classes = useStyles();
   const { authUser, firebase, setOpenSnackbar, setSnackbarMsg } = props;
   const uid = authUser.uid;
+
   const defaultExercise = {
-    name: "",
+    title: "",
     group: "",
   };
+
   const [exercise, setExercise] = useState(defaultExercise);
   const [value, setValue] = React.useState("");
-  const isValid = exercise.name === "";
+  const isValid = exercise.title === "";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(name + " :::: " + value);
     setExercise({
       ...exercise,
       [name]: value,
     });
   };
-  const handleRadioChange = (event) => {
-    setValue(event.target.value);
-    console.log(event.target.value);
+  const handleRadioChange = (e) => {
+    console.log(exercise);
+    const { name, value } = e.target;
+    setValue(value);
+    setExercise({
+      ...exercise,
+      [name]: value,
+    });
   };
 
   //   const handleRadioChange = (e) => {
@@ -63,9 +61,11 @@ function AddExercise(props) {
   //   };
 
   const handleSubmit = () => {
+    console.log("EXERCISE : ");
+    console.log(exercise);
     if (authUser) {
       firebase.addExercise(uid, exercise);
-      setExercise({ name: "", group: exercise.group });
+      setExercise(defaultExercise);
       console.log("openSnack");
       // setSnackbarMsg('Added exercise');
       // setTimeout(() => {
@@ -119,8 +119,8 @@ function AddExercise(props) {
           required
           fullWidth
           label="Exercise name"
-          value={exercise.name}
-          name="name"
+          value={exercise.title}
+          name="title"
           onChange={handleChange}
         />
         <Button

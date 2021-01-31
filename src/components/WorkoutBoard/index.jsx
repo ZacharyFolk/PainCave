@@ -20,6 +20,11 @@ export default function WorkoutBuild(props) {
           <h2>Type : {props.activity.group} </h2>
         </>
       )}
+      {props.activity.title !== "" && (
+        <>
+          <p>{props.activity.title}</p>
+        </>
+      )}
       {props.activity.duration !== "" && (
         <>
           <p>Duration : {props.activity.duration}</p>

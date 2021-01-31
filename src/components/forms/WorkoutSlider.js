@@ -9,7 +9,6 @@ const WorkoutSlider = (props) => {
     };
 
     function setObject(){
-
         props.setActivity({
             ...props.activity,
             [props.name]: value

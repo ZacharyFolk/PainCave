@@ -89,8 +89,12 @@ function AddActivitySelect(props) {
   const [options, setOptions] = React.useState([]);
   function handleChange(e) {
     const { name, value } = e.target;
-    setExercise(value);
+    console.log("HANDLE SELECT CHANGE");
     console.log(name + value);
+    props.setActivity({
+      ...props.activity,
+      [name]: value,
+    });
   }
 
   const handleRadioChange = (e) => {
@@ -114,28 +118,34 @@ function AddActivitySelect(props) {
     ref.on("value", (snapshot) => {
       if (snapshot && snapshot.exists()) {
         snapshot.forEach((data) => {
+          console.log("DATA VAL");
+          console.log(data.val);
+          console.log("DATA KEY");
+          console.log(data.key);
+
           const dataVal = data.val();
           exerciseArray.push(
             <option key={data.key} value={dataVal}>
-              {" "}
-              {dataVal}{" "}
+              {dataVal}
             </option>
           );
         });
         setOptions(exerciseArray);
+        console.log(options);
       }
     });
   }
 
   function test() {
     console.log(props.activity);
-    console.log(props.defaultActivity);
+    //  console.log(props.defaultActivity);
   }
 
   return (
     <>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
         <FormControl>
+          <p>Create Workout for </p>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
               value={props.selectedDate}
@@ -148,7 +158,10 @@ function AddActivitySelect(props) {
             handleRadioChange={handleRadioChange}
           />
 
-          <select onChange={handleChange}>{options}</select>
+          <select name="title" onChange={handleChange}>
+            <option selected="selected">Choose an activity</option>
+            {options}
+          </select>
 
           <RenderSwitch
             value={value}
