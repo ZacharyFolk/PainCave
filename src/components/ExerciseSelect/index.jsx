@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { withFirebase } from "../Firebase";
 import FormControl from "@material-ui/core/FormControl";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import RadioButtonsGroup from "../forms/Radios";
@@ -82,15 +81,12 @@ function resetObject(props) {
 }
 
 function AddActivitySelect(props) {
-  const { firebase, authUser, workout } = props;
-  const [value, setValue] = React.useState("");
-  const [exerciseName, setExercise] = React.useState("");
+  const { firebase, authUser } = props;
+  const [value, setValue] = useState("");
 
-  const [options, setOptions] = React.useState([]);
+  const [options, setOptions] = useState([]);
   function handleChange(e) {
     const { name, value } = e.target;
-    console.log("HANDLE SELECT CHANGE");
-    console.log(name + value);
     props.setActivity({
       ...props.activity,
       [name]: value,
@@ -98,14 +94,14 @@ function AddActivitySelect(props) {
   }
 
   const handleRadioChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setValue(value);
 
-    resetObject(props);
+    //  resetObject(props);
 
     props.setActivity({
       ...props.activity,
-      ["group"]: value,
+      name: value,
     });
     fetchOptions(value);
   };
@@ -118,11 +114,6 @@ function AddActivitySelect(props) {
     ref.on("value", (snapshot) => {
       if (snapshot && snapshot.exists()) {
         snapshot.forEach((data) => {
-          console.log("DATA VAL");
-          console.log(data.val);
-          console.log("DATA KEY");
-          console.log(data.key);
-
           const dataVal = data.val();
           exerciseArray.push(
             <option key={data.key} value={dataVal}>
@@ -131,14 +122,8 @@ function AddActivitySelect(props) {
           );
         });
         setOptions(exerciseArray);
-        console.log(options);
       }
     });
-  }
-
-  function test() {
-    console.log(props.activity);
-    //  console.log(props.defaultActivity);
   }
 
   return (
@@ -159,7 +144,7 @@ function AddActivitySelect(props) {
           />
 
           <select name="title" onChange={handleChange}>
-            <option selected="selected">Choose an activity</option>
+            <option>Choose an activity</option>
             {options}
           </select>
 
@@ -168,8 +153,6 @@ function AddActivitySelect(props) {
             setActivity={props.setActivity}
             activity={props.activity}
           />
-
-          <AddCircleIcon onClick={test} />
         </FormControl>
       </form>
     </>

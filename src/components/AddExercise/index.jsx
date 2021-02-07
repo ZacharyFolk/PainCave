@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { withFirebase } from "../Firebase";
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
+import RadioButtonsGroup from "../forms/Radios";
 
 // import {
 //     FormControl,
@@ -18,7 +14,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 //   } from "@material-ui/core";
 
 function AddExercise(props) {
-  const { authUser, firebase, setOpenSnackbar, setSnackbarMsg } = props;
+  const { authUser, firebase } = props;
   const uid = authUser.uid;
 
   const defaultExercise = {
@@ -27,12 +23,12 @@ function AddExercise(props) {
   };
 
   const [exercise, setExercise] = useState(defaultExercise);
-  const [value, setValue] = React.useState("");
+  const [exName, setExerciseName] = useState("");
+  const [value, setValue] = React.useState("cardio");
   const isValid = exercise.title === "";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name + " :::: " + value);
     setExercise({
       ...exercise,
       [name]: value,
@@ -48,24 +44,13 @@ function AddExercise(props) {
     });
   };
 
-  //   const handleRadioChange = (e) => {
-  //     const { name, value } = e.target;
-  //     console.log(name + value);
-  //     setExercise({
-  //       ...exercise,
-  //       [name]: value,
-  //     });
-  //     setValue(value);
-
-  //     console.log(exercise);
-  //   };
-
   const handleSubmit = () => {
     console.log("EXERCISE : ");
     console.log(exercise);
     if (authUser) {
       firebase.addExercise(uid, exercise);
-      setExercise(defaultExercise);
+      setExercise({ ...exercise, ["title"]: "" });
+      setValue(exercise.group);
       console.log("openSnack");
       // setSnackbarMsg('Added exercise');
       // setTimeout(() => {
@@ -74,44 +59,13 @@ function AddExercise(props) {
     }
   };
 
-  function RadioButtonsGroup() {
-    return (
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Types</FormLabel>
-        <RadioGroup
-          aria-label="group"
-          name="group"
-          value={value}
-          onChange={handleRadioChange}
-          row
-        >
-          <FormControlLabel
-            name="group"
-            value="cardio"
-            control={<Radio />}
-            label="Cardio 🚴"
-          />
-          <FormControlLabel
-            name="group"
-            value="body"
-            control={<Radio />}
-            label="Body 🤸‍♂️"
-          />
-          <FormControlLabel
-            name="group"
-            value="weights"
-            control={<Radio />}
-            label="Weights 🏋️"
-          />
-        </RadioGroup>
-      </FormControl>
-    );
-  }
-
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <FormControl>
-        <RadioButtonsGroup />
+        <RadioButtonsGroup
+          value={exercise.group}
+          handleRadioChange={handleRadioChange}
+        />
         <TextField
           style={{ marginTop: "5px" }}
           variant="outlined"

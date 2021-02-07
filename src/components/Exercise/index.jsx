@@ -5,10 +5,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import AddExercise from "../AddExercise";
-import ExerciseList from "../ExerciseList";
 import useStyles from "../../config/theme.exercise";
 import ExerciseSelect from "../ExerciseSelect";
-import Modal from "@material-ui/core/Modal";
 import Drawer from "@material-ui/core/Drawer";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
@@ -17,10 +15,11 @@ import WorkoutBoard from "../WorkoutBoard";
 
 function Exercise(props) {
   const [selectedDate, handleDateChange] = useState(new Date());
+
   const defaultActivity = {
+    id: null,
     title: "",
     group: "",
-    date: selectedDate,
     distance: 0,
     duration: 0,
     reps: 0,
@@ -28,6 +27,16 @@ function Exercise(props) {
     type: 1,
     weight: 0,
   };
+
+  const session = {
+    date: selectedDate,
+    start: null,
+    end: null,
+    activities: [{}],
+  };
+
+  const [activity, setActivity] = useState({});
+  const [workout, setWorkout] = useState(session);
 
   const classes = useStyles();
   const { authUser, firebase } = props;
@@ -37,22 +46,33 @@ function Exercise(props) {
   const [exercises, setExercises] = useState(true);
   const [loading, setLoading] = useState([]);
   const [drawer, setDrawerState] = useState(false);
-  const [activity, setActivity] = useState(defaultActivity);
-
-  const [values, buildPlan] = useState(defaultActivity);
 
   const onDataChanged = (name, value) => {
-    console.log("YOU DID SOMETHING");
-    console.log(name + ":" + value);
-    // activity[name] = value;
-    console.log(defaultActivity);
-    console.log(activity);
-
     // console.log(event.target.value)
     // setSliderValue(value);
   };
   function handleDrawerToggle() {
     setDrawerState(!drawer);
+  }
+
+  const handleSubmit = () => {
+    console.log(workout);
+    // if (authUser) {
+    //   // firebase.addWorkout(uid, workout);
+    //   setWorkout(session);
+    //   // console.log("openSnack");
+    //   // setSnackbarMsg('Added exercise');
+    //   // setTimeout(() => {
+    //   //     setOpenSnackbar(false)
+    //   // }, 30000)
+    // }
+  };
+
+  function test2() {
+    setWorkout({
+      ...workout,
+      activities: [...workout.activities, activity],
+    });
   }
 
   return (
@@ -76,9 +96,18 @@ function Exercise(props) {
             selectedDate={selectedDate}
             handleDateChange={handleDateChange}
             onDataChanged={onDataChanged}
+            workout={workout}
+            setWorkout={setWorkout}
             // setSliderValue={setSliderValue}
             // sliderValue={sliderValue}
           />
+
+          <p>Test Submit </p>
+          <AddCircleIcon onClick={handleSubmit} />
+
+          <p>Test Creation</p>
+          <AddCircleIcon onClick={test2} />
+
           <Drawer anchor="right" open={drawer}>
             <AddExercise
               authUser={props.authUser}
