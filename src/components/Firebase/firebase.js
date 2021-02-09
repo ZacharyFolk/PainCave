@@ -47,8 +47,8 @@ class Firebase {
     addWorkout = (uid, workout) => {
         const ref = this.db.ref().child(`users/${uid}/workouts/`);
         ref.push(workout);
-        console.log('FROM FIREBASE.js workout object')
-        console.log(workout);
+        // console.log('FROM FIREBASE.js workout object')
+        // console.log(workout);
     } 
 
 }

@@ -8,12 +8,12 @@ import {
   IconButton,
   Drawer,
 } from "@material-ui/core/";
-import AddExercise from "../AddExercise";
+import AddExercise from "./add-exercise";
 import useStyles from "../../config/theme.exercise";
-import ExerciseSelect from "../ExerciseSelect";
+import ActivityBuilder from "./activity-builder";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
-import WorkoutBoard from "../WorkoutBoard";
+import WorkoutBoard from "./workout-board";
 
 function Exercise(props) {
   let defaultDate = useState(new Date().getFullYear());
@@ -120,7 +120,7 @@ function Exercise(props) {
             <AddCircleIcon onClick={handleDrawerToggle} />
           </>
 
-          <ExerciseSelect
+          <ActivityBuilder
             exercises={exercises}
             authUser={props.authUser}
             activity={activity}

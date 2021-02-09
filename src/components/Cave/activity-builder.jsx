@@ -74,7 +74,7 @@ function RenderSwitch(props) {
   }
 }
 
-function AddActivitySelect(props) {
+function ActivityBuilder(props) {
   const { firebase, authUser } = props;
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
@@ -169,4 +169,4 @@ function AddActivitySelect(props) {
   );
 }
 
-export default withFirebase(AddActivitySelect);
+export default withFirebase(ActivityBuilder);

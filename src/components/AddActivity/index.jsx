@@ -26,8 +26,6 @@ function RadioButtonsGroup(props) {
   const { authUser, firebase } = props;
   const [value, setValue] = React.useState("cardio");
 
-  console.log("What is this? " + value);
-
   const handleRadioChange = (event) => {
     setValue(event.target.value);
     //   CreateExerciseSelect();
