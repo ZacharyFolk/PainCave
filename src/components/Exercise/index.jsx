@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import {
+  CssBaseline,
+  Paper,
+  Grid,
+  IconButton,
+  Drawer,
+} from "@material-ui/core/";
 import AddExercise from "../AddExercise";
 import useStyles from "../../config/theme.exercise";
 import ExerciseSelect from "../ExerciseSelect";
-import Drawer from "@material-ui/core/Drawer";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
-import IconButton from "@material-ui/core/IconButton";
 import WorkoutBoard from "../WorkoutBoard";
 
 function Exercise(props) {
+  let defaultDate = useState(new Date().getFullYear());
+  console.log("date");
+  console.log(defaultDate);
+  console.log(defaultDate.year);
   const [selectedDate, handleDateChange] = useState(new Date());
 
   const defaultActivity = {
@@ -30,8 +36,8 @@ function Exercise(props) {
 
   const session = {
     date: selectedDate,
-    start: null,
-    end: null,
+    start: "some",
+    end: "thing",
     activities: [{}],
   };
 
@@ -75,11 +81,27 @@ function Exercise(props) {
     });
   }
 
+  function test3() {
+    if (authUser) {
+      firebase.addWorkout(uid, workout);
+      setWorkout(session);
+      // console.log("openSnack");
+      // setSnackbarMsg("Added exercise");
+      // setTimeout(() => {
+      //   setOpenSnackbar(false);
+      // }, 30000);
+    }
+  }
+
+  function test4() {
+    console.log(workout);
+  }
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7}>
-        <WorkoutBoard activity={activity} />
+        <WorkoutBoard activity={activity} workout={workout} />
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
@@ -105,8 +127,14 @@ function Exercise(props) {
           <p>Test Submit </p>
           <AddCircleIcon onClick={handleSubmit} />
 
-          <p>Test Creation</p>
+          <p>Set Workout State</p>
           <AddCircleIcon onClick={test2} />
+
+          <p>Set Workout DB</p>
+          <AddCircleIcon onClick={test3} />
+
+          <p>Log Workout</p>
+          <AddCircleIcon onClick={test4} />
 
           <Drawer anchor="right" open={drawer}>
             <AddExercise

@@ -5,7 +5,9 @@ import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import RadioButtonsGroup from "../forms/Radios";
 import WorkoutSlider from "../forms/WorkoutSlider";
+import MenuItem from "@material-ui/core/MenuItem";
 
+import Select from "@material-ui/core/Select";
 function RenderSwitch(props) {
   switch (props.value) {
     case "cardio":
@@ -83,10 +85,13 @@ function resetObject(props) {
 function AddActivitySelect(props) {
   const { firebase, authUser } = props;
   const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
 
   const [options, setOptions] = useState([]);
+
   function handleChange(e) {
     const { name, value } = e.target;
+    setTitle(value);
     props.setActivity({
       ...props.activity,
       [name]: value,
@@ -116,9 +121,13 @@ function AddActivitySelect(props) {
         snapshot.forEach((data) => {
           const dataVal = data.val();
           exerciseArray.push(
-            <option key={data.key} value={dataVal}>
+            <MenuItem key={data.key} value={dataVal}>
               {dataVal}
-            </option>
+            </MenuItem>
+
+            // <option key={data.key} value={dataVal}>
+            //   {dataVal}
+            // </option>
           );
         });
         setOptions(exerciseArray);
@@ -143,10 +152,21 @@ function AddActivitySelect(props) {
             handleRadioChange={handleRadioChange}
           />
 
-          <select name="title" onChange={handleChange}>
+          {/* <select name="title" onChange={handleChange}>
             <option>Choose an activity</option>
             {options}
-          </select>
+          </select> */}
+
+          <Select
+            labelId="demo-simple-select-autowidth-label"
+            id="demo-simple-select-autowidth"
+            name="title"
+            value={title}
+            onChange={handleChange}
+            autoWidth
+          >
+            {options}
+          </Select>
 
           <RenderSwitch
             value={value}
