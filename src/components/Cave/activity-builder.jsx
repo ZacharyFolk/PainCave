@@ -3,8 +3,8 @@ import { withFirebase } from "../Firebase";
 import FormControl from "@material-ui/core/FormControl";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import RadioButtonsGroup from "../forms/Radios";
-import WorkoutSlider from "../forms/WorkoutSlider";
+import RadioButtonsGroup from "./radios-type";
+import WorkoutSlider from "./workout-slider";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import Select from "@material-ui/core/Select";
