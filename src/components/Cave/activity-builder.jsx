@@ -5,9 +5,22 @@ import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import RadioButtonsGroup from "./radios-type";
 import WorkoutSlider from "./workout-slider";
-import MenuItem from "@material-ui/core/MenuItem";
-
+import { Paper, Grid, MenuItem } from "@material-ui/core/";
 import Select from "@material-ui/core/Select";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 300,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
 function RenderSwitch(props) {
   switch (props.value) {
     case "cardio":
@@ -70,14 +83,17 @@ function RenderSwitch(props) {
         </>
       );
     default:
-      return <p>Choose a group</p>;
+      return null;
   }
 }
 
 function ActivityBuilder(props) {
-  const { firebase, authUser } = props;
+  const classes = useStyles();
+
+  const { firebase, authUser, handleDrawerToggle } = props;
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
+  const [selectLabel, setLabel] = useState("Choose a type");
 
   const [options, setOptions] = useState([]);
 
@@ -93,11 +109,11 @@ function ActivityBuilder(props) {
   const handleRadioChange = (e) => {
     const { value } = e.target;
     setValue(value);
-
     props.setActivity({
       ...props.activity,
       name: value,
     });
+    setLabel("Choose " + value + " activity");
     fetchOptions(value);
   };
 
@@ -111,9 +127,9 @@ function ActivityBuilder(props) {
         snapshot.forEach((data) => {
           const dataVal = data.val();
           exerciseArray.push(
-            <MenuItem key={data.key} value={dataVal}>
+            <option key={data.key} value={dataVal}>
               {dataVal}
-            </MenuItem>
+            </option>
 
             // <option key={data.key} value={dataVal}>
             //   {dataVal}
@@ -136,34 +152,51 @@ function ActivityBuilder(props) {
               onChange={props.handleDateChange}
             />
           </MuiPickersUtilsProvider>
+        </FormControl>
 
-          <RadioButtonsGroup
-            value={value}
-            handleRadioChange={handleRadioChange}
-          />
+        <RadioButtonsGroup
+          value={value}
+          handleRadioChange={handleRadioChange}
+        />
 
-          {/* <select name="title" onChange={handleChange}>
+        {/* <select name="title" onChange={handleChange}>
             <option>Choose an activity</option>
             {options}
           </select> */}
+        <Paper className={classes.paper}>
+          <Grid container spacing={2}>
+            <Grid item xs={false} xs={12}>
+              <FormControl variant="filled" className={classes.formControl}>
+                <InputLabel htmlFor="activity-selector">
+                  {selectLabel}
+                </InputLabel>
 
-          <Select
-            labelId="demo-simple-select-autowidth-label"
-            id="demo-simple-select-autowidth"
-            name="title"
-            value={title}
-            onChange={handleChange}
-            autoWidth
-          >
-            {options}
-          </Select>
-
-          <RenderSwitch
-            value={value}
-            setActivity={props.setActivity}
-            activity={props.activity}
-          />
-        </FormControl>
+                <Select
+                  name="title"
+                  value={title}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: "title",
+                    id: "activity-selector",
+                  }}
+                >
+                  <option aria-label="None" value="" />
+                  {options}
+                </Select>
+              </FormControl>
+              <AddCircleIcon onClick={handleDrawerToggle} />
+            </Grid>
+          </Grid>
+        </Paper>
+        <Paper className={classes.paper}>
+          <Grid container>
+            <RenderSwitch
+              value={value}
+              setActivity={props.setActivity}
+              activity={props.activity}
+            />
+          </Grid>
+        </Paper>
       </form>
     </>
   );

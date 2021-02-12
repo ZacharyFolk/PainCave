@@ -17,9 +17,7 @@ import WorkoutBoard from "./workout-board";
 
 function Exercise(props) {
   let defaultDate = useState(new Date().getFullYear());
-  console.log("date");
-  console.log(defaultDate);
-  console.log(defaultDate.year);
+
   const [selectedDate, handleDateChange] = useState(new Date());
 
   const defaultActivity = {
@@ -116,10 +114,6 @@ function Exercise(props) {
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
-          <>
-            <AddCircleIcon onClick={handleDrawerToggle} />
-          </>
-
           <ActivityBuilder
             exercises={exercises}
             authUser={props.authUser}
@@ -129,16 +123,17 @@ function Exercise(props) {
             selectedDate={selectedDate}
             handleDateChange={handleDateChange}
             onDataChanged={onDataChanged}
+            handleDrawerToggle={handleDrawerToggle}
             workout={workout}
             setWorkout={setWorkout}
             // setSliderValue={setSliderValue}
             // sliderValue={sliderValue}
           />
 
-          <p>Test Submit </p>
-          <AddCircleIcon onClick={handleSubmit} />
+          {/* <p>Test Submit </p>
+          <AddCircleIcon onClick={handleSubmit} /> */}
 
-          <p>Set Workout State</p>
+          <p>Add Activity</p>
           <AddCircleIcon onClick={test2} />
 
           <p>Set Workout DB</p>
