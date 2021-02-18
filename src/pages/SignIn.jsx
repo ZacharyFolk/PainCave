@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { withFirebase } from "../components/Firebase";
 import { Link, withRouter } from "react-router-dom";
-import { Button,
-CssBaseline } from "@material-ui/core/";
+import { Button, CssBaseline } from "@material-ui/core/";
 
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
@@ -10,7 +9,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import useStyles from "../config/theme.signinup";
-import Copyright from "../components/Copyright";
 
 import PasswordForget from "../components/PasswordForget";
 
@@ -118,9 +116,6 @@ function SignIn(props) {
                       <PasswordForget />
                     </Grid>
                   </Grid>
-                  <Box mt={5}>
-                    <Copyright />
-                  </Box>
                 </form>
               </Grid>
             </Grid>

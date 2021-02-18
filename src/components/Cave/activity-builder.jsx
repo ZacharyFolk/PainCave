@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { withFirebase } from "../Firebase";
-import FormControl from "@material-ui/core/FormControl";
+import { Link, FormControl } from "@material-ui/core/";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import RadioButtonsGroup from "./radios-type";
@@ -39,8 +39,9 @@ function RenderSwitch(props) {
           <WorkoutSlider
             activity={props.activity}
             setActivity={props.setActivity}
+            defaultValue={3}
             step={1}
-            max={10}
+            max={15}
             name="sets"
           />
 
@@ -48,7 +49,8 @@ function RenderSwitch(props) {
             activity={props.activity}
             setActivity={props.setActivity}
             step={1}
-            max={20}
+            defaultValue={10}
+            max={30}
             name="reps"
           />
         </>
@@ -69,6 +71,7 @@ function RenderSwitch(props) {
             activity={props.activity}
             setActivity={props.setActivity}
             step={1}
+            defaultValue={3}
             max={10}
             name="sets"
           />
@@ -77,6 +80,7 @@ function RenderSwitch(props) {
             activity={props.activity}
             setActivity={props.setActivity}
             step={1}
+            defaultValue={10}
             max={20}
             name="reps"
           />
@@ -105,6 +109,18 @@ function ActivityBuilder(props) {
       [name]: value,
     });
   }
+
+  const selectChange = (e) => {
+    const { value } = e.target;
+    console.log(value);
+    setValue(value);
+    props.setActivity({
+      ...props.activity,
+      name: value,
+    });
+    setLabel("Choose " + value + " activity");
+    fetchOptions(value);
+  };
 
   const handleRadioChange = (e) => {
     const { value } = e.target;
@@ -144,33 +160,43 @@ function ActivityBuilder(props) {
   return (
     <>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
-        <FormControl>
-          <p>Create Workout for </p>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker
-              value={props.selectedDate}
-              onChange={props.handleDateChange}
-            />
-          </MuiPickersUtilsProvider>
-        </FormControl>
-
-        <RadioButtonsGroup
-          value={value}
-          handleRadioChange={handleRadioChange}
-        />
-
-        {/* <select name="title" onChange={handleChange}>
-            <option>Choose an activity</option>
-            {options}
-          </select> */}
         <Paper className={classes.paper}>
-          <Grid container spacing={2}>
-            <Grid item xs={false} xs={12}>
+          <Grid
+            container
+            spacing={2}
+            container
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item>
               <FormControl variant="filled" className={classes.formControl}>
+                <InputLabel htmlFor="activity-type">{selectLabel}</InputLabel>
+                <Select
+                  name="group"
+                  onChange={selectChange}
+                  inputProps={{
+                    name: "group",
+                    id: "activity-type",
+                  }}
+                  defaultValue={"DEFAULT"}
+                >
+                  <option value="DEFAULT" disabled>
+                    Choose a salutation ...
+                  </option>
+                  <option aria-label="None" value="cardio">
+                    Cardio
+                  </option>
+                  <option aria-label="None" value="body">
+                    Body
+                  </option>
+                  <option aria-label="None" value="weights">
+                    Weights
+                  </option>
+                </Select>
+
                 <InputLabel htmlFor="activity-selector">
                   {selectLabel}
                 </InputLabel>
-
                 <Select
                   name="title"
                   value={title}
@@ -184,7 +210,11 @@ function ActivityBuilder(props) {
                   {options}
                 </Select>
               </FormControl>
-              <AddCircleIcon onClick={handleDrawerToggle} />
+            </Grid>
+            <Grid item>
+              <Link href="#" onClick={handleDrawerToggle}>
+                Add new activity
+              </Link>
             </Grid>
           </Grid>
         </Paper>

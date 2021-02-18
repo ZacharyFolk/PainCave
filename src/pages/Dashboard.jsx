@@ -14,12 +14,9 @@ import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-
 import useStyles from "../config/theme.dashboard";
-
 import Calendar from "../components/Calendar";
 import Sidebar from "../components/Sidebar";
-import Copyright from "../components/Copyright";
 
 function Dashboard(props) {
   const classes = useStyles();
@@ -100,9 +97,6 @@ function Dashboard(props) {
               <div className={classes.appBarSpacer} />
               <Container maxWidth="xl" className={classes.container}>
                 <Calendar firebase={props.firebase} authUser={authUser} />
-                <Box pt={4}>
-                  <Copyright />
-                </Box>
               </Container>
             </main>
           </div>

@@ -30,50 +30,6 @@ export default function WorkoutBuild(props) {
   }
 
   return (
-    //     <Box
-    //       id="workout_board"
-    //       boxShadow={3}
-    //       bgcolor="background.paper"
-    //       m={1}
-    //       p={1}
-    //     >
-    //       <h1>Workout Plan</h1>
-    // <p></p>
-    //       {props.activity.group !== "" && (
-    //         <>
-    //           <h2>Type : {props.activity.group} </h2>
-    //         </>
-    //       )}
-    //       {props.activity.title !== "" && (
-    //         <>
-    //           <p>{props.activity.title}</p>
-    //         </>
-    //       )}
-    //       {props.activity.duration !== "" && (
-    //         <>
-    //           <p>Duration : {props.activity.duration}</p>
-    //         </>
-    //       )}
-    //       {props.activity.sets > 0 && (
-    //         <>
-    //           <p>Sets : {props.activity.sets}</p>
-    //         </>
-    //       )}
-
-    //       {props.activity.reps > 0 && (
-    //         <>
-    //           <p>Reps : {props.activity.reps}</p>
-    //         </>
-    //       )}
-
-    //       {props.activity.weights > 0 && (
-    //         <>
-    //           <p>Weights : {props.activity.weights}</p>
-    //         </>
-    //       )}
-    //       <AddCircleIcon onClick={fetchActivities} />
-    //     </Box>
-
     <>
       {props.workout.activities === "not set" ||
       props.workout.activities === null ? (
@@ -122,8 +78,21 @@ export default function WorkoutBuild(props) {
                           <TableCell>{activity.weights} lbs </TableCell>
                         </>
                       )}
-                      <TableCell>{activity.duration} mins</TableCell>
-
+                      {activity.duration !== undefined && (
+                        <>
+                          <TableCell>{activity.duration} mins</TableCell>
+                        </>
+                      )}
+                      {activity.sets !== undefined && (
+                        <>
+                          <TableCell>{activity.sets} sets</TableCell>
+                        </>
+                      )}
+                      {activity.reps !== undefined && (
+                        <>
+                          <TableCell>{activity.reps} reps</TableCell>
+                        </>
+                      )}
                       {/* <TableCell>
                       <DeleteIcon onClick={(e) => deleteActivity(i)} />
                       <EditIcon

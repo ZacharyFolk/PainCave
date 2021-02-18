@@ -25,6 +25,7 @@ const WorkoutSlider = (props) => {
         valueLabelDisplay="auto"
         step={props.step}
         marks
+        defaultValue={props.defaultValue}
         min={0}
         max={props.max}
         name={props.name}

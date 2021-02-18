@@ -7,7 +7,14 @@ import {
   Grid,
   IconButton,
   Drawer,
+  Button,
 } from "@material-ui/core/";
+import FormControl from "@material-ui/core/FormControl";
+import DateFnsUtils from "@date-io/date-fns"; // choose your lib
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 import AddExercise from "./add-exercise";
 import useStyles from "../../config/theme.exercise";
 import ActivityBuilder from "./activity-builder";
@@ -59,9 +66,7 @@ function Exercise(props) {
     setDrawerState(!drawer);
   }
   function resetObject(workout) {
-    console.log("yo");
     var obj = workout.activities;
-    console.log(obj);
     Object.keys(obj).forEach(function (key) {
       if (obj[key] !== "") {
         obj[key] = "";
@@ -81,12 +86,11 @@ function Exercise(props) {
     // }
   };
 
-  function test2() {
+  function addActivity() {
     setWorkout({
       ...workout,
       activities: [...workout.activities, activity],
     });
-    console.log("click");
     resetObject(workout);
   }
 
@@ -107,10 +111,33 @@ function Exercise(props) {
   }
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7}>
-        <WorkoutBoard activity={activity} workout={workout} />
+    <Grid
+      container
+      component={Paper}
+      className={classes.root}
+      elevation={6}
+      square
+    >
+      {/* <CssBaseline /> */}
+
+      <Grid item xs={12}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container justify="space-around">
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Create session for : "
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
@@ -132,15 +159,17 @@ function Exercise(props) {
 
           {/* <p>Test Submit </p>
           <AddCircleIcon onClick={handleSubmit} /> */}
-
-          <p>Add Activity</p>
-          <AddCircleIcon onClick={test2} />
-
-          <p>Set Workout DB</p>
-          <AddCircleIcon onClick={test3} />
-
-          <p>Log Workout</p>
-          <AddCircleIcon onClick={test4} />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={addActivity}
+            // disabled={isValid}
+          >
+            Add Activity
+          </Button>
 
           <Drawer anchor="right" open={drawer}>
             <AddExercise
@@ -157,6 +186,8 @@ function Exercise(props) {
           </Drawer>
         </div>
       </Grid>
+
+      <WorkoutBoard activity={activity} workout={workout} />
     </Grid>
   );
 }

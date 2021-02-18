@@ -6,7 +6,6 @@ import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Copyright from "../components/Copyright";
 
 function SignUp(props) {
   const initialUser = {
@@ -107,9 +106,6 @@ function SignUp(props) {
                 <Link to="/">{"Already have an account? Sign In"}</Link>
               </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
           </form>
         </div>
       </Grid>
