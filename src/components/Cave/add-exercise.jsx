@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { withFirebase } from "../Firebase";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
+import { Button, TextField, FormControl } from "@material-ui/core/";
 import RadioButtonsGroup from "./radios-type";
 
 // import {
@@ -23,7 +21,6 @@ function AddExercise(props) {
   };
 
   const [exercise, setExercise] = useState(defaultExercise);
-  const [exName, setExerciseName] = useState("");
   const [value, setValue] = React.useState("cardio");
   const isValid = exercise.title === "";
 

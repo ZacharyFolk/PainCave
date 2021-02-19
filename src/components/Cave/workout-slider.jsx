@@ -22,7 +22,6 @@ const WorkoutSlider = (props) => {
       <Slider
         value={value}
         aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
         step={props.step}
         marks
         defaultValue={props.defaultValue}

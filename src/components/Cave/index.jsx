@@ -8,7 +8,10 @@ import {
   IconButton,
   Drawer,
   Button,
+  Fab,
 } from "@material-ui/core/";
+import NavigationIcon from "@material-ui/icons/Navigation";
+
 import FormControl from "@material-ui/core/FormControl";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import {
@@ -106,20 +109,13 @@ function Exercise(props) {
     }
   }
 
-  function test4() {
+  function viewWorkout() {
+    console.log(activity);
     console.log(workout);
   }
 
   return (
-    <Grid
-      container
-      component={Paper}
-      className={classes.root}
-      elevation={6}
-      square
-    >
-      {/* <CssBaseline /> */}
-
+    <Grid container justify="center">
       <Grid item xs={12}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justify="space-around">
@@ -139,8 +135,8 @@ function Exercise(props) {
           </Grid>
         </MuiPickersUtilsProvider>
       </Grid>
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
+      <Grid item xs={12}>
+        <Grid container justify="center">
           <ActivityBuilder
             exercises={exercises}
             authUser={props.authUser}
@@ -170,24 +166,29 @@ function Exercise(props) {
           >
             Add Activity
           </Button>
-
-          <Drawer anchor="right" open={drawer}>
-            <AddExercise
-              authUser={props.authUser}
-              setOpenSnackbar={setOpenSnackbar}
-              setSnackbarMsg={setSnackbarMsg}
-            />
-            <IconButton
-              onClick={handleDrawerToggle}
-              className={classes.closeMenuButton}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Drawer>
-        </div>
+        </Grid>
+        <Drawer anchor="right" open={drawer}>
+          <AddExercise
+            authUser={props.authUser}
+            setOpenSnackbar={setOpenSnackbar}
+            setSnackbarMsg={setSnackbarMsg}
+          />
+          <IconButton
+            onClick={handleDrawerToggle}
+            className={classes.closeMenuButton}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Drawer>
       </Grid>
 
       <WorkoutBoard activity={activity} workout={workout} />
+      <>
+        <Fab variant="extended" onClick={viewWorkout}>
+          <NavigationIcon className={classes.extendedIcon} />
+          View Progress
+        </Fab>
+      </>
     </Grid>
   );
 }

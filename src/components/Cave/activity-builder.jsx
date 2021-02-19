@@ -1,106 +1,89 @@
 import React, { useState } from "react";
 import { withFirebase } from "../Firebase";
-import { Link, FormControl } from "@material-ui/core/";
-import DateFnsUtils from "@date-io/date-fns"; // choose your lib
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import RadioButtonsGroup from "./radios-type";
-import WorkoutSlider from "./workout-slider";
-import { Paper, Grid, MenuItem } from "@material-ui/core/";
+import {
+  Link,
+  FormControl,
+  Button,
+  FormHelperText,
+  makeStyles,
+  NativeSelect,
+  Modal,
+  ListItemText,
+} from "@material-ui/core/";
+import RenderSwitch from "./render-switch";
+import {
+  Paper,
+  Grid,
+  MenuItem,
+  IconButton,
+  ListItemSecondaryAction,
+} from "@material-ui/core/";
 import Select from "@material-ui/core/Select";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import { mdiWeightLifter, mdiYoga, mdiBike } from "@mdi/js";
+import Icon from "@mdi/react";
+import ControlPointOutlinedIcon from "@material-ui/icons/ControlPointOutlined";
+import Divider from "@material-ui/core/Divider";
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 300,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
-function RenderSwitch(props) {
-  switch (props.value) {
-    case "cardio":
-      return (
-        <WorkoutSlider
-          activity={props.activity}
-          setActivity={props.setActivity}
-          step={1}
-          max={120}
-          name="duration"
-        />
-      );
-    case "body":
-      return (
-        <>
-          <WorkoutSlider
-            activity={props.activity}
-            setActivity={props.setActivity}
-            defaultValue={3}
-            step={1}
-            max={15}
-            name="sets"
-          />
-
-          <WorkoutSlider
-            activity={props.activity}
-            setActivity={props.setActivity}
-            step={1}
-            defaultValue={10}
-            max={30}
-            name="reps"
-          />
-        </>
-      );
-
-    case "weights":
-      return (
-        <>
-          <WorkoutSlider
-            activity={props.activity}
-            setActivity={props.setActivity}
-            step={5}
-            max={350}
-            name="weights"
-          />
-
-          <WorkoutSlider
-            activity={props.activity}
-            setActivity={props.setActivity}
-            step={1}
-            defaultValue={3}
-            max={10}
-            name="sets"
-          />
-
-          <WorkoutSlider
-            activity={props.activity}
-            setActivity={props.setActivity}
-            step={1}
-            defaultValue={10}
-            max={20}
-            name="reps"
-          />
-        </>
-      );
-    default:
-      return null;
-  }
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
 }
 
-function ActivityBuilder(props) {
-  const classes = useStyles();
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
 
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
+function ActivityBuilder(props) {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      position: "absolute",
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 220,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  }));
+
+  const [modalStyle] = React.useState(getModalStyle);
   const { firebase, authUser, handleDrawerToggle } = props;
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [selectLabel, setLabel] = useState("Choose a type");
-
   const [options, setOptions] = useState([]);
+  const [exerciseList, setList] = useState([]);
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [exerciseTitle, setExerciseTitle] = useState("");
+  const [groupValue, setGroup] = useState("");
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   function handleChange(e) {
     const { name, value } = e.target;
     setTitle(value);
@@ -110,27 +93,49 @@ function ActivityBuilder(props) {
     });
   }
 
+  function addToWorkout() {
+    props.setWorkout({
+      ...props.workout,
+      activities: [...props.workout.activities, props.activity],
+    });
+    // resetObject(workout);
+  }
+
+  const openExerciseOptions = (e) => {
+    setExerciseTitle(e.currentTarget.value);
+    props.setActivity({
+      ...props.activity,
+      ["title"]: e.currentTarget.value,
+    });
+    handleOpen();
+  };
+
+  const body = (
+    <div style={modalStyle} className={classes.paper}>
+      <h2 id="simple-modal-title">{exerciseTitle}</h2>
+      <p id="simple-modal-description">
+        {/* TODO: Add description field to exercise table? */}
+      </p>
+      <RenderSwitch
+        value={groupValue}
+        setActivity={props.setActivity}
+        activity={props.activity}
+      />
+      <Button variant="outlined" onClick={addToWorkout}>
+        Add Activity to Workout
+      </Button>
+    </div>
+  );
   const selectChange = (e) => {
     const { value } = e.target;
     console.log(value);
-    setValue(value);
+    setGroup(value);
     props.setActivity({
       ...props.activity,
       name: value,
     });
     setLabel("Choose " + value + " activity");
-    fetchOptions(value);
-  };
-
-  const handleRadioChange = (e) => {
-    const { value } = e.target;
-    setValue(value);
-    props.setActivity({
-      ...props.activity,
-      name: value,
-    });
-    setLabel("Choose " + value + " activity");
-    fetchOptions(value);
+    ExerciseList(value);
   };
 
   function fetchOptions(value) {
@@ -146,10 +151,6 @@ function ActivityBuilder(props) {
             <option key={data.key} value={dataVal}>
               {dataVal}
             </option>
-
-            // <option key={data.key} value={dataVal}>
-            //   {dataVal}
-            // </option>
           );
         });
         setOptions(exerciseArray);
@@ -157,77 +158,111 @@ function ActivityBuilder(props) {
     });
   }
 
+  function ExerciseList(value) {
+    let ref = firebase.db
+      .ref()
+      .child(`users/${authUser.uid}/exercises/groups/${value}/`);
+    var exerciseArray = [];
+    const modalFooter = (
+      <List component="nav" aria-label="secondary ">
+        <ListItemLink href="#" onClick={handleDrawerToggle}>
+          <ListItemText primary="Add new activity" />
+        </ListItemLink>
+      </List>
+    );
+
+    ref.on("value", (snapshot) => {
+      if (snapshot && snapshot.exists()) {
+        snapshot.forEach((data) => {
+          const dataVal = data.val();
+          exerciseArray.push(
+            <ListItem key={data.key}>
+              <ListItemText primary={dataVal} />
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="add"
+                  onClick={openExerciseOptions}
+                  key={data.key}
+                  value={dataVal}
+                >
+                  <ControlPointOutlinedIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+
+            // <option key={data.key} value={dataVal}>
+            //   {dataVal}
+            // </option>
+          );
+        });
+        exerciseArray.push(modalFooter);
+
+        setList(exerciseArray);
+      }
+    });
+  }
+
   return (
     <>
-      <form noValidate onSubmit={(e) => e.preventDefault()}>
-        <Paper className={classes.paper}>
-          <Grid
-            container
-            spacing={2}
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item>
-              <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel htmlFor="activity-type">{selectLabel}</InputLabel>
-                <Select
-                  name="group"
-                  onChange={selectChange}
-                  inputProps={{
-                    name: "group",
-                    id: "activity-type",
-                  }}
-                  defaultValue={"DEFAULT"}
-                >
-                  <option value="DEFAULT" disabled>
-                    Choose a salutation ...
-                  </option>
-                  <option aria-label="None" value="cardio">
-                    Cardio
-                  </option>
-                  <option aria-label="None" value="body">
-                    Body
-                  </option>
-                  <option aria-label="None" value="weights">
-                    Weights
-                  </option>
-                </Select>
-
-                <InputLabel htmlFor="activity-selector">
-                  {selectLabel}
-                </InputLabel>
-                <Select
-                  name="title"
-                  value={title}
-                  onChange={handleChange}
-                  inputProps={{
-                    name: "title",
-                    id: "activity-selector",
-                  }}
-                >
-                  <option aria-label="None" value="" />
-                  {options}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item>
-              <Link href="#" onClick={handleDrawerToggle}>
-                Add new activity
-              </Link>
-            </Grid>
-          </Grid>
-        </Paper>
-        <Paper className={classes.paper}>
-          <Grid container>
-            <RenderSwitch
-              value={value}
-              setActivity={props.setActivity}
-              activity={props.activity}
-            />
-          </Grid>
-        </Paper>
-      </form>
+      <Grid container justify="center">
+        <Grid container item xs={12} justify="center">
+          <FormControl variant="outlined" className={classes.formControl}>
+            <Select /* switch with NativeSelect? */
+              name="group"
+              displayEmpty
+              className={classes.selectEmpty}
+              onChange={selectChange}
+              value={groupValue}
+              inputProps={{
+                name: "group",
+                id: "activity-type",
+              }}
+            >
+              <MenuItem value="" disabled>
+                Select type:
+              </MenuItem>
+              <MenuItem value="cardio">Cardio</MenuItem>
+              <MenuItem value="body">Body</MenuItem>
+              <MenuItem value="weights">Weights</MenuItem>
+              {/* <option value="cardio">Weights</option>
+              <option value="body">Body</option>
+              <option value="weights">Weights</option> */}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid container item xs={12} justify="center">
+          {/* <FormControl variant="filled" className={classes.formControl}>
+            <InputLabel htmlFor="activity-selector">{selectLabel}</InputLabel>
+            <Select
+              name="title"
+              value={title}
+              onChange={handleChange}
+              inputProps={{
+                name: "title",
+                id: "activity-selector",
+              }}
+            >
+              <option aria-label="None" value="" />
+              {options}
+            </Select>
+          </FormControl> */}
+          <List>{exerciseList}</List>
+        </Grid>
+      </Grid>
+      {/* <RenderSwitch
+        value={value}
+        setActivity={props.setActivity}
+        activity={props.activity}
+      /> */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {body}
+      </Modal>
     </>
   );
 }

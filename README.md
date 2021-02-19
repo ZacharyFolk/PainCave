@@ -4,15 +4,12 @@
  * Based off of [this tutorial](https://dev.to/sanderdebr/let-s-build-workout-tracker-with-react-and-firebase-part-1-1hng) 
   
 # Todos 
-* Add graphic
-* More Arnold
-* Create Exercise Groups
-* Groups => Output of select input
-* Example : Weights Group reveals sets, reps, and weight slider 
-* Example : Cardio Group reveal duration and distance sliders
-* Example : Body Group reveals sets and reps
-* 🏋️ Exercise should be able to have an emoji attached 🚴 
+* Settings page
+* Cave graphic sign-in
 * Start timer for workout
+* Dark/Light theme switcher
+* Imperial - Metric switcher
+  
  
 ### User Story
 * User must be able to create an exercise
