@@ -24,7 +24,12 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-import { mdiWeightLifter, mdiYoga, mdiBike } from "@mdi/js";
+import {
+  mdiWeightLifter,
+  mdiYoga,
+  mdiBike,
+  mdiScriptTextKeyOutline,
+} from "@mdi/js";
 import Icon from "@mdi/react";
 import ControlPointOutlinedIcon from "@material-ui/icons/ControlPointOutlined";
 import Divider from "@material-ui/core/Divider";
@@ -79,6 +84,7 @@ function ActivityBuilder(props) {
 
   const handleOpen = () => {
     setOpen(true);
+    // console.log("WHAT IS " + exerciseTitle);
   };
 
   const handleClose = () => {
@@ -92,8 +98,24 @@ function ActivityBuilder(props) {
       [name]: value,
     });
   }
+  const handleRadioChange = (e) => {
+    const { value } = e.target;
+    setValue(value);
 
+    props.setActivity({
+      ...props.activity,
+      name: value,
+    });
+    fetchOptions(value);
+  };
   function addToWorkout() {
+    console.log("ACTIVITY");
+    console.log(exerciseTitle);
+
+    props.setActivity({
+      ...props.activity,
+      ["title"]: exerciseTitle,
+    });
     props.setWorkout({
       ...props.workout,
       activities: [...props.workout.activities, props.activity],
@@ -102,11 +124,12 @@ function ActivityBuilder(props) {
   }
 
   const openExerciseOptions = (e) => {
+    // console.log(props.activity);
+    console.log(e.currentTarget.value);
     setExerciseTitle(e.currentTarget.value);
-    props.setActivity({
-      ...props.activity,
-      ["title"]: e.currentTarget.value,
-    });
+    console.log(exerciseTitle);
+    // console.log("ACTIVITY AFTER");
+    // console.log(props.activity);
     handleOpen();
   };
 
@@ -126,15 +149,15 @@ function ActivityBuilder(props) {
       </Button>
     </div>
   );
+
   const selectChange = (e) => {
-    const { value } = e.target;
-    console.log(value);
+    const { name, value } = e.target;
     setGroup(value);
     props.setActivity({
       ...props.activity,
-      name: value,
+      [name]: value,
     });
-    setLabel("Choose " + value + " activity");
+    // setLabel("Choose " + value + " activity");
     ExerciseList(value);
   };
 
@@ -163,13 +186,13 @@ function ActivityBuilder(props) {
       .ref()
       .child(`users/${authUser.uid}/exercises/groups/${value}/`);
     var exerciseArray = [];
-    const modalFooter = (
-      <List component="nav" aria-label="secondary ">
-        <ListItemLink href="#" onClick={handleDrawerToggle}>
-          <ListItemText primary="Add new activity" />
-        </ListItemLink>
-      </List>
-    );
+    // const modalFooter = (
+    //   <List component="nav" aria-label="secondary ">
+    //     <ListItemLink href="#" onClick={handleDrawerToggle}>
+    //       <ListItemText primary="Add new activity" />
+    //     </ListItemLink>
+    //   </List>
+    // );
 
     ref.on("value", (snapshot) => {
       if (snapshot && snapshot.exists()) {
@@ -196,7 +219,7 @@ function ActivityBuilder(props) {
             // </option>
           );
         });
-        exerciseArray.push(modalFooter);
+        //exerciseArray.push(modalFooter);
 
         setList(exerciseArray);
       }

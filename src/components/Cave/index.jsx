@@ -2,34 +2,30 @@ import React, { useState } from "react";
 import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
 import {
-  CssBaseline,
-  Paper,
   Grid,
   IconButton,
   Drawer,
   Button,
   Fab,
+  Modal,
 } from "@material-ui/core/";
-import NavigationIcon from "@material-ui/icons/Navigation";
-
-import FormControl from "@material-ui/core/FormControl";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import CloseIcon from "@material-ui/icons/Close";
+import NavigationIcon from "@material-ui/icons/Navigation";
 import AddExercise from "./add-exercise";
 import useStyles from "../../config/theme.exercise";
 import ActivityBuilder from "./activity-builder";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import CloseIcon from "@material-ui/icons/Close";
 import WorkoutBoard from "./workout-board";
 
 function Exercise(props) {
   let defaultDate = useState(new Date().getFullYear());
+  const [open, setOpen] = React.useState(false);
 
   const [selectedDate, handleDateChange] = useState(new Date());
-
   const defaultActivity = {
     id: null,
     title: "",
@@ -51,7 +47,7 @@ function Exercise(props) {
 
   const [activity, setActivity] = useState({});
   const [workout, setWorkout] = useState(session);
-
+  const [group, setGroup] = useState("");
   const classes = useStyles();
   const { authUser, firebase } = props;
   const uid = authUser.uid;
@@ -65,6 +61,14 @@ function Exercise(props) {
     // console.log(event.target.value)
     // setSliderValue(value);
   };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   function handleDrawerToggle() {
     setDrawerState(!drawer);
   }
@@ -149,13 +153,15 @@ function Exercise(props) {
             handleDrawerToggle={handleDrawerToggle}
             workout={workout}
             setWorkout={setWorkout}
+            setGroup={setGroup}
+            selectedDate={selectedDate}
             // setSliderValue={setSliderValue}
             // sliderValue={sliderValue}
           />
 
           {/* <p>Test Submit </p>
           <AddCircleIcon onClick={handleSubmit} /> */}
-          <Button
+          {/* <Button
             type="submit"
             fullWidth
             variant="contained"
@@ -165,7 +171,7 @@ function Exercise(props) {
             // disabled={isValid}
           >
             Add Activity
-          </Button>
+          </Button> */}
         </Grid>
         <Drawer anchor="right" open={drawer}>
           <AddExercise
@@ -181,14 +187,22 @@ function Exercise(props) {
           </IconButton>
         </Drawer>
       </Grid>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <>
+          <WorkoutBoard activity={activity} workout={workout} />
+        </>
+      </Modal>
 
-      <WorkoutBoard activity={activity} workout={workout} />
-      <>
-        <Fab variant="extended" onClick={viewWorkout}>
-          <NavigationIcon className={classes.extendedIcon} />
-          View Progress
-        </Fab>
-      </>
+      <Fab variant="extended" onClick={handleOpen}>
+        {/* viewWorkout handleOpen */}
+        <NavigationIcon className={classes.extendedIcon} />
+        View Progress
+      </Fab>
     </Grid>
   );
 }
