@@ -20,13 +20,22 @@ import AddExercise from "./add-exercise";
 import useStyles from "../../config/theme.exercise";
 import ActivityBuilder from "./activity-builder";
 import WorkoutBoard from "./workout-board";
-
+import ExerciseSelect from "./exercise-select";
+import ExerciseList from "./exercise-list";
 function Exercise(props) {
   let defaultDate = useState(new Date().getFullYear());
   const [open, setOpen] = React.useState(false);
 
   const [selectedDate, handleDateChange] = useState(new Date());
-  const defaultActivity = {
+
+  const session = {
+    date: selectedDate,
+    start: "some",
+    end: "thing",
+    activities: [{}],
+  };
+
+  const [activity, setActivity] = useState({
     id: null,
     title: "",
     group: "",
@@ -36,16 +45,7 @@ function Exercise(props) {
     sets: 0,
     type: 1,
     weight: 0,
-  };
-
-  const session = {
-    date: selectedDate,
-    start: "some",
-    end: "thing",
-    activities: [{}],
-  };
-
-  const [activity, setActivity] = useState({});
+  });
   const [workout, setWorkout] = useState(session);
   const [group, setGroup] = useState("");
   const classes = useStyles();
@@ -115,7 +115,7 @@ function Exercise(props) {
 
   function viewWorkout() {
     console.log(activity);
-    console.log(workout);
+    //  console.log(workout);
   }
 
   return (
@@ -141,11 +141,21 @@ function Exercise(props) {
       </Grid>
       <Grid item xs={12}>
         <Grid container justify="center">
+          <ExerciseSelect activity={activity} setActivity={setActivity} />
+        </Grid>{" "}
+        <Grid container justify="center">
+          <ExerciseList
+            activity={activity}
+            authUser={authUser}
+            firebase={firebase}
+            setActivity={setActivity}
+          />
+        </Grid>
+        <Grid container justify="center">
           <ActivityBuilder
             exercises={exercises}
             authUser={props.authUser}
             activity={activity}
-            defaultActivity={defaultActivity}
             setActivity={setActivity}
             selectedDate={selectedDate}
             handleDateChange={handleDateChange}
@@ -198,7 +208,7 @@ function Exercise(props) {
         </>
       </Modal>
 
-      <Fab variant="extended" onClick={handleOpen}>
+      <Fab variant="extended" onClick={viewWorkout}>
         {/* viewWorkout handleOpen */}
         <NavigationIcon className={classes.extendedIcon} />
         View Progress

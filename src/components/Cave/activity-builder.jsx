@@ -51,6 +51,7 @@ function getModalStyle() {
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
+
 function ActivityBuilder(props) {
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -108,6 +109,7 @@ function ActivityBuilder(props) {
     });
     fetchOptions(value);
   };
+
   function addToWorkout() {
     console.log("ACTIVITY");
     console.log(exerciseTitle);
@@ -150,17 +152,6 @@ function ActivityBuilder(props) {
     </div>
   );
 
-  const selectChange = (e) => {
-    const { name, value } = e.target;
-    setGroup(value);
-    props.setActivity({
-      ...props.activity,
-      [name]: value,
-    });
-    // setLabel("Choose " + value + " activity");
-    ExerciseList(value);
-  };
-
   function fetchOptions(value) {
     let ref = firebase.db
       .ref()
@@ -181,79 +172,55 @@ function ActivityBuilder(props) {
     });
   }
 
-  function ExerciseList(value) {
-    let ref = firebase.db
-      .ref()
-      .child(`users/${authUser.uid}/exercises/groups/${value}/`);
-    var exerciseArray = [];
-    // const modalFooter = (
-    //   <List component="nav" aria-label="secondary ">
-    //     <ListItemLink href="#" onClick={handleDrawerToggle}>
-    //       <ListItemText primary="Add new activity" />
-    //     </ListItemLink>
-    //   </List>
-    // );
+  // function ExerciseList(value) {
+  //   let ref = firebase.db
+  //     .ref()
+  //     .child(`users/${authUser.uid}/exercises/groups/${value}/`);
+  //   var exerciseArray = [];
+  //   // const modalFooter = (
+  //   //   <List component="nav" aria-label="secondary ">
+  //   //     <ListItemLink href="#" onClick={handleDrawerToggle}>
+  //   //       <ListItemText primary="Add new activity" />
+  //   //     </ListItemLink>
+  //   //   </List>
+  //   // );
 
-    ref.on("value", (snapshot) => {
-      if (snapshot && snapshot.exists()) {
-        snapshot.forEach((data) => {
-          const dataVal = data.val();
-          exerciseArray.push(
-            <ListItem key={data.key}>
-              <ListItemText primary={dataVal} />
-              <ListItemSecondaryAction>
-                <IconButton
-                  edge="end"
-                  aria-label="add"
-                  onClick={openExerciseOptions}
-                  key={data.key}
-                  value={dataVal}
-                >
-                  <ControlPointOutlinedIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
+  //   ref.on("value", (snapshot) => {
+  //     if (snapshot && snapshot.exists()) {
+  //       snapshot.forEach((data) => {
+  //         const dataVal = data.val();
+  //         exerciseArray.push(
+  //           <ListItem key={data.key}>
+  //             <ListItemText primary={dataVal} />
+  //             <ListItemSecondaryAction>
+  //               <IconButton
+  //                 edge="end"
+  //                 aria-label="add"
+  //                 onClick={openExerciseOptions}
+  //                 key={data.key}
+  //                 value={dataVal}
+  //               >
+  //                 <ControlPointOutlinedIcon />
+  //               </IconButton>
+  //             </ListItemSecondaryAction>
+  //           </ListItem>
 
-            // <option key={data.key} value={dataVal}>
-            //   {dataVal}
-            // </option>
-          );
-        });
-        //exerciseArray.push(modalFooter);
+  //           // <option key={data.key} value={dataVal}>
+  //           //   {dataVal}
+  //           // </option>
+  //         );
+  //       });
+  //       //exerciseArray.push(modalFooter);
 
-        setList(exerciseArray);
-      }
-    });
-  }
+  //       setList(exerciseArray);
+  //     }
+  //   });
+  // }
 
   return (
     <>
       <Grid container justify="center">
-        <Grid container item xs={12} justify="center">
-          <FormControl variant="outlined" className={classes.formControl}>
-            <Select /* switch with NativeSelect? */
-              name="group"
-              displayEmpty
-              className={classes.selectEmpty}
-              onChange={selectChange}
-              value={groupValue}
-              inputProps={{
-                name: "group",
-                id: "activity-type",
-              }}
-            >
-              <MenuItem value="" disabled>
-                Select type:
-              </MenuItem>
-              <MenuItem value="cardio">Cardio</MenuItem>
-              <MenuItem value="body">Body</MenuItem>
-              <MenuItem value="weights">Weights</MenuItem>
-              {/* <option value="cardio">Weights</option>
-              <option value="body">Body</option>
-              <option value="weights">Weights</option> */}
-            </Select>
-          </FormControl>
-        </Grid>
+        <Grid container item xs={12} justify="center"></Grid>
         <Grid container item xs={12} justify="center">
           {/* <FormControl variant="filled" className={classes.formControl}>
             <InputLabel htmlFor="activity-selector">{selectLabel}</InputLabel>
@@ -270,7 +237,7 @@ function ActivityBuilder(props) {
               {options}
             </Select>
           </FormControl> */}
-          <List>{exerciseList}</List>
+          {/* <List>{exerciseList}</List> */}
         </Grid>
       </Grid>
       {/* <RenderSwitch
