@@ -1,33 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withFirebase } from "../Firebase";
 import {
-  Link,
   FormControl,
   Button,
-  FormHelperText,
   makeStyles,
-  NativeSelect,
   Modal,
   ListItemText,
-} from "@material-ui/core/";
-import RenderSwitch from "./render-switch";
-import {
-  Paper,
   Grid,
   MenuItem,
   IconButton,
   ListItemSecondaryAction,
 } from "@material-ui/core/";
+import RenderSwitch from "./render-switch";
+
 import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import { mdiWeightLifter, mdiYoga, mdiBike } from "@mdi/js";
-import Icon from "@mdi/react";
 import ControlPointOutlinedIcon from "@material-ui/icons/ControlPointOutlined";
-import Divider from "@material-ui/core/Divider";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -66,16 +55,26 @@ function ActivityBuilder(props) {
   }));
 
   const [modalStyle] = React.useState(getModalStyle);
-  const { firebase, authUser, handleDrawerToggle } = props;
+  const {
+    firebase,
+    authUser,
+    selectLabel,
+    setLabel,
+    handleDrawerToggle,
+  } = props;
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
-  const [selectLabel, setLabel] = useState("Choose a type");
   const [options, setOptions] = useState([]);
   const [exerciseList, setList] = useState([]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [exerciseTitle, setExerciseTitle] = useState("");
   const [groupValue, setGroup] = useState("");
+
+  useEffect(() => {
+    console.log("Activity BUilder rendered");
+    console.log(groupValue);
+  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -102,6 +101,7 @@ function ActivityBuilder(props) {
   }
 
   const openExerciseOptions = (e) => {
+    console.log("what is going on HERE?! " + groupValue);
     setExerciseTitle(e.currentTarget.value);
     props.setActivity({
       ...props.activity,
@@ -127,52 +127,34 @@ function ActivityBuilder(props) {
     </div>
   );
   const selectChange = (e) => {
-    const { value } = e.target;
-    console.log(value);
+    const { name, value } = e.target;
+    console.log("what is this name: " + e.target.name + " and value: " + value);
+
     setGroup(value);
     props.setActivity({
       ...props.activity,
-      name: value,
+      [name]: value,
     });
-    setLabel("Choose " + value + " activity");
-    ExerciseList(value);
+
+    createExerciseList(value);
   };
-
-  function fetchOptions(value) {
+  // TODO : Need to move this up to index.. activites is a step behind here
+  function createExerciseList(value) {
     let ref = firebase.db
       .ref()
       .child(`users/${authUser.uid}/exercises/groups/${value}/`);
     var exerciseArray = [];
-    ref.on("value", (snapshot) => {
-      if (snapshot && snapshot.exists()) {
-        snapshot.forEach((data) => {
-          const dataVal = data.val();
-          exerciseArray.push(
-            <option key={data.key} value={dataVal}>
-              {dataVal}
-            </option>
-          );
-        });
-        setOptions(exerciseArray);
-      }
-    });
-  }
-
-  function ExerciseList(value) {
-    let ref = firebase.db
-      .ref()
-      .child(`users/${authUser.uid}/exercises/groups/${value}/`);
-    var exerciseArray = [];
-    const modalFooter = (
-      <List component="nav" aria-label="secondary ">
-        <ListItemLink href="#" onClick={handleDrawerToggle}>
-          <ListItemText primary="Add new activity" />
-        </ListItemLink>
-      </List>
-    );
+    // const modalFooter = (
+    //   <List component="nav" aria-label="secondary ">
+    //     <ListItemLink href="#" onClick={handleDrawerToggle}>
+    //       <ListItemText primary="Add new activity" />
+    //     </ListItemLink>
+    //   </List>
+    // );
 
     ref.on("value", (snapshot) => {
       if (snapshot && snapshot.exists()) {
+        console.log("WHAT IS IT HERE? " + value);
         snapshot.forEach((data) => {
           const dataVal = data.val();
           exerciseArray.push(
@@ -184,7 +166,7 @@ function ActivityBuilder(props) {
                   aria-label="add"
                   onClick={openExerciseOptions}
                   key={data.key}
-                  value={dataVal}
+                  value={value}
                 >
                   <ControlPointOutlinedIcon />
                 </IconButton>
@@ -196,11 +178,15 @@ function ActivityBuilder(props) {
             // </option>
           );
         });
-        exerciseArray.push(modalFooter);
-
+        // exerciseArray.push(modalFooter);
+        console.log(exerciseArray);
         setList(exerciseArray);
       }
     });
+
+    console.log("Now what activities look like? ");
+    console.log(value);
+    console.log(props.activity);
   }
 
   return (
