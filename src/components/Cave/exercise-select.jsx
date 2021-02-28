@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles, FormControl, MenuItem, Select } from "@material-ui/core/";
 
 export default function ExerciseSelect(props) {
-  const { exSelectChange, exType, activity } = props;
+  const { activity, setActivity } = props;
   const useStyles = makeStyles((theme) => ({
     paper: {
       position: "absolute",
@@ -21,46 +21,45 @@ export default function ExerciseSelect(props) {
     },
   }));
   const classes = useStyles();
-  useEffect(() => {
-    console.log("Exercise Select rendered: (exType) " + exType);
-    console.log(
-      "============ Exercise Select STATE OF ACTIVITY ================"
-    );
-    console.log(activity);
-  });
-  // const exSelectChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setExerciseType(value);
-  //   setActivity({
-  //     ...activity,
-  //     [name]: value,
-  //   });
 
-  //   // buildList(value);
-  // };
+  const [exType, setExerciseType] = useState("");
+  function resetObject() {
+    Object.keys(activity).forEach(function (key) {
+      if (activity[key] !== "") {
+        //console.log(activity[key]);
+        activity[key] = "";
+      }
+    });
+  }
+  const exSelectChange = (e) => {
+    resetObject();
+    const { name, value } = e.target;
+    setExerciseType(value);
+    setActivity({
+      ...activity,
+      [name]: value,
+    });
+  };
   return (
-    <>
-      {console.log("From Ex-select (exType): " + exType)}
-      <FormControl variant="outlined" className={classes.formControl}>
-        <Select /* switch with NativeSelect? */
-          name="group"
-          displayEmpty
-          className={classes.selectEmpty}
-          onChange={exSelectChange}
-          value={exType}
-          inputProps={{
-            name: "group",
-            id: "activity-type",
-          }}
-        >
-          <MenuItem value="" disabled>
-            Select type:
-          </MenuItem>
-          <MenuItem value="cardio">Cardio</MenuItem>
-          <MenuItem value="body">Body</MenuItem>
-          <MenuItem value="weights">Weights</MenuItem>
-        </Select>
-      </FormControl>
-    </>
+    <FormControl variant="outlined" className={classes.formControl}>
+      <Select /* switch with NativeSelect? */
+        name="group"
+        displayEmpty
+        className={classes.selectEmpty}
+        onChange={exSelectChange}
+        value={exType}
+        inputProps={{
+          name: "group",
+          id: "activity-type",
+        }}
+      >
+        <MenuItem value="" disabled>
+          Select type:
+        </MenuItem>
+        <MenuItem value="cardio">Cardio</MenuItem>
+        <MenuItem value="body">Body</MenuItem>
+        <MenuItem value="weights">Weights</MenuItem>
+      </Select>
+    </FormControl>
   );
 }

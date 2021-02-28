@@ -67,7 +67,7 @@ class Firebase {
  
         }
       });
-      console.log('how bout?');
+      console.log('(exerciseArray) from firebase :');
       console.log(exerciseArray);
       exerciseArray.forEach(element => console.log(element));
 

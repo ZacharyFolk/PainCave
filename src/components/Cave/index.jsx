@@ -4,6 +4,8 @@ import { withRouter } from "react-router-dom";
 import {
   CssBaseline,
   Paper,
+  makeStyles,
+  Modal,
   Grid,
   IconButton,
   Drawer,
@@ -23,16 +25,34 @@ import useStyles from "../../config/theme.exercise";
 import ActivityBuilder from "./activity-builder";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
-import WorkoutBoard from "./workout-board";
+// import WorkoutBoard from "./workout-board";
 import ExerciseSelect from "./exercise-select";
-import ExerciseList from "./exercise-list";
+// import ExerciseList from "./exercise-list";
 import { ListItemText, ListItemSecondaryAction } from "@material-ui/core/";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ControlPointOutlinedIcon from "@material-ui/icons/ControlPointOutlined";
+import RenderSwitch from "./render-switch";
+
 function Exercise(props) {
   let defaultDate = useState(new Date().getFullYear());
-
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      position: "absolute",
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 220,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  }));
   const [selectedDate, handleDateChange] = useState(new Date());
 
   const defaultActivity = {
@@ -66,54 +86,121 @@ function Exercise(props) {
   const [exercises, setExercises] = useState(true);
   const [loading, setLoading] = useState([]);
   const [drawer, setDrawerState] = useState(false);
+  const [exerciseTitle, setExerciseTitle] = useState("");
+  const [open, setOpen] = React.useState(false);
 
   const [exType, setExerciseType] = useState("");
-  const [exList, setList] = useState([]);
+  const [exerciseList, setList] = useState([]);
+  function rand() {
+    return Math.round(Math.random() * 20) - 10;
+  }
+  function getModalStyle() {
+    const top = 50 + rand();
+    const left = 50 + rand();
 
-  useEffect(() => {
-    console.log("Index rendered");
-    console.log("From Index (exType) : " + exType);
-    console.log("============ INDEX STATE OF ACTIVITY ================");
-    console.log(activity);
-  }, []);
+    return {
+      top: `${top}%`,
+      left: `${left}%`,
+      transform: `translate(-${top}%, -${left}%)`,
+    };
+  }
+  const [modalStyle] = React.useState(getModalStyle);
 
-  const exSelectChange = (e) => {
-    const { name, value } = e.target;
-    setExerciseType(value);
-    setActivity({
-      ...activity,
-      [name]: value,
-    });
-
-    // buildList(value);
+  const exerciseDetails = (
+    <div style={modalStyle} className={classes.paper}>
+      <h2 id="simple-modal-title">{exerciseTitle}</h2>
+      <p id="simple-modal-description">
+        {/* TODO: Add description field to exercise table? */}
+      </p>
+      <RenderSwitch
+        value={activity.group}
+        setActivity={setActivity}
+        activity={activity}
+      />
+      <Button variant="outlined" onClick={addToWorkout}>
+        Add Activity to Workout
+      </Button>
+    </div>
+  );
+  const handleOpen = () => {
+    setOpen(true);
   };
 
-  function buildList() {
-    let exArray = firebase.fetchExercise(uid, exType);
-    console.log("buildList (exType) (exArray)");
-    console.log(exType);
-    console.log(exArray);
-    // var i;
-    // for (i = 0; i < exArray.length; i++) {
-    //   console.log("uhh");
-    //   console.log(exArray[i]);
-    // }
-    exArray.map((v, i) => {
-      console.log("V: " + v);
-      console.log("I: " + i);
-      // listArray.push(
-      //   <ListItem key={i}>
-      //     <ListItemText primary={v} />
-      //   </ListItem>
-      // );
+  const handleClose = () => {
+    setOpen(false);
+  };
+  // useEffect(() => {
+  //   console.log("Index rendered");
+  //   console.log("From Index (exType) : " + exType);
+  //   console.log("============ INDEX STATE OF ACTIVITY ================");
+  //   console.log(activity);
+  // }, []);
+
+  useEffect(() => {
+    // console.log("Activity value changed");
+    // console.log(activity);
+    // console.log(activity.group);
+    if (activity.group != "undefined") {
+      CreateExerciseList();
+    }
+  }, [activity]);
+
+  function ListItemLink(props) {
+    return <ListItem button component="a" {...props} />;
+  }
+
+  function CreateExerciseList() {
+    let ref = firebase.db
+      .ref()
+      .child(`users/${authUser.uid}/exercises/groups/${activity.group}/`);
+    var exerciseArray = [];
+    const modalFooter = (
+      <List component="nav" aria-label="secondary " key="extra_001">
+        <ListItem>
+          <ListItemLink href="#" onClick={handleDrawerToggle}>
+            <ListItemText primary="Add new activity" />
+          </ListItemLink>
+        </ListItem>
+      </List>
+    );
+
+    ref.on("value", (snapshot) => {
+      if (snapshot && snapshot.exists()) {
+        console.log("WHAT IS IT HERE? " + activity.group);
+        snapshot.forEach((data) => {
+          const dataVal = data.val();
+          exerciseArray.push(
+            <ListItem key={data.key}>
+              <ListItemText primary={dataVal} />
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="add"
+                  onClick={openExerciseOptions}
+                  key={data.key}
+                  value={dataVal}
+                >
+                  <ControlPointOutlinedIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        });
+        exerciseArray.push(modalFooter);
+        console.log(exerciseArray);
+        setList(exerciseArray);
+      }
     });
-
-    // setList(listArray);
   }
 
-  function fetchActivities() {
-    console.log("exType : " + exType);
-  }
+  const openExerciseOptions = (e) => {
+    setExerciseTitle(e.currentTarget.value);
+    setActivity({
+      ...activity,
+      ["title"]: e.currentTarget.value,
+    });
+    handleOpen();
+  };
 
   function handleDrawerToggle() {
     setDrawerState(!drawer);
@@ -139,29 +226,22 @@ function Exercise(props) {
     // }
   };
 
-  function addActivity() {
+  function addToWorkout() {
+    console.log("Activity when add to workout");
+    console.log(activity);
+
     setWorkout({
       ...workout,
       activities: [...workout.activities, activity],
     });
     resetObject(workout);
   }
-
-  function test3() {
-    if (authUser) {
-      firebase.addWorkout(uid, workout);
-      setWorkout(session);
-      // console.log("openSnack");
-      // setSnackbarMsg("Added exercise");
-      // setTimeout(() => {
-      //   setOpenSnackbar(false);
-      // }, 30000);
-    }
-  }
-
   function viewWorkout() {
-    console.log(exList);
+    console.log("======================(exerciseList)======================");
+    console.log(exerciseList);
+    console.log("======================(activity)======================");
     console.log(activity);
+    console.log("======================(workout)======================");
     console.log(workout);
   }
 
@@ -188,16 +268,22 @@ function Exercise(props) {
       </Grid>
       <Grid item xs={12}>
         <Grid container justify="center">
-          <ExerciseSelect
-            exSelectChange={exSelectChange}
-            exType={exType}
-            buildList={buildList}
-            activity={activity}
-          />
-          {/* <Grid container item xs={12} justify="center">
-            <List>{exList}</List>
-          </Grid> */}
-          <ActivityBuilder
+          <Grid container item xs={12} justify="center">
+            <ExerciseSelect setActivity={setActivity} activity={activity} />
+          </Grid>
+          <Grid container item xs={12} justify="center">
+            <List>{exerciseList}</List>
+          </Grid>
+
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+            {exerciseDetails}
+          </Modal>
+          {/* <ActivityBuilder
             exercises={exercises}
             authUser={props.authUser}
             activity={activity}
@@ -212,21 +298,9 @@ function Exercise(props) {
             setLabel={setLabel}
             // setSliderValue={setSliderValue}
             // sliderValue={sliderValue}
-          />
-
+          /> */}
           {/* <p>Test Submit </p>
           <AddCircleIcon onClick={handleSubmit} /> */}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={addActivity}
-            // disabled={isValid}
-          >
-            Add Activity
-          </Button>
         </Grid>
         <Drawer anchor="right" open={drawer}>
           <AddExercise
@@ -243,7 +317,6 @@ function Exercise(props) {
         </Drawer>
       </Grid>
 
-      <WorkoutBoard activity={activity} workout={workout} />
       <>
         <Fab variant="extended" onClick={viewWorkout}>
           <NavigationIcon className={classes.extendedIcon} />

@@ -62,6 +62,17 @@ function ActivityBuilder(props) {
     setLabel,
     handleDrawerToggle,
   } = props;
+  const defaultActivity = {
+    id: null,
+    title: "",
+    group: "",
+    distance: 0,
+    duration: 0,
+    reps: 0,
+    sets: 0,
+    type: 1,
+    weight: 0,
+  };
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [options, setOptions] = useState([]);
@@ -70,11 +81,29 @@ function ActivityBuilder(props) {
   const [open, setOpen] = React.useState(false);
   const [exerciseTitle, setExerciseTitle] = useState("");
   const [groupValue, setGroup] = useState("");
+  const [activity, setActivity] = useState({});
 
   useEffect(() => {
-    console.log("Activity BUilder rendered");
+    console.log("Group value changed");
     console.log(groupValue);
-  }, []);
+    setActivity({
+      ...activity,
+      ["group"]: groupValue,
+    });
+  }, [groupValue]);
+
+  useEffect(() => {
+    console.log("Exercise title changed");
+    console.log(exerciseTitle);
+    console.log(activity);
+    setActivity({
+      ...activity,
+      activity: {
+        title: exerciseTitle,
+        group: groupValue,
+      },
+    });
+  }, [exerciseTitle]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -87,7 +116,7 @@ function ActivityBuilder(props) {
     const { name, value } = e.target;
     setTitle(value);
     props.setActivity({
-      ...props.activity,
+      ...activity,
       [name]: value,
     });
   }
@@ -101,10 +130,12 @@ function ActivityBuilder(props) {
   }
 
   const openExerciseOptions = (e) => {
-    console.log("what is going on HERE?! " + groupValue);
+    // set title state here and useEffect to listen to that
+    console.log("what is group value in openExerciseOptions? " + groupValue);
+    console.log("what is title (target.value)? " + e.currentTarget.value);
     setExerciseTitle(e.currentTarget.value);
-    props.setActivity({
-      ...props.activity,
+    setActivity({
+      ...activity,
       ["title"]: e.currentTarget.value,
     });
     handleOpen();
@@ -118,8 +149,8 @@ function ActivityBuilder(props) {
       </p>
       <RenderSwitch
         value={groupValue}
-        setActivity={props.setActivity}
-        activity={props.activity}
+        setActivity={setActivity}
+        activity={activity}
       />
       <Button variant="outlined" onClick={addToWorkout}>
         Add Activity to Workout
@@ -128,14 +159,12 @@ function ActivityBuilder(props) {
   );
   const selectChange = (e) => {
     const { name, value } = e.target;
-    console.log("what is this name: " + e.target.name + " and value: " + value);
-
     setGroup(value);
-    props.setActivity({
-      ...props.activity,
-      [name]: value,
-    });
-
+    // setActivity({
+    //   ...activity,
+    //   [name]: value,
+    // });
+    console.log(activity);
     createExerciseList(value);
   };
   // TODO : Need to move this up to index.. activites is a step behind here
@@ -166,7 +195,7 @@ function ActivityBuilder(props) {
                   aria-label="add"
                   onClick={openExerciseOptions}
                   key={data.key}
-                  value={value}
+                  value={dataVal}
                 >
                   <ControlPointOutlinedIcon />
                 </IconButton>
@@ -186,7 +215,7 @@ function ActivityBuilder(props) {
 
     console.log("Now what activities look like? ");
     console.log(value);
-    console.log(props.activity);
+    console.log(activity);
   }
 
   return (
