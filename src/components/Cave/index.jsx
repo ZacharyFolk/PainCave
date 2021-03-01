@@ -19,6 +19,8 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import CloseIcon from "@material-ui/icons/Close";
+import NavigationIcon from "@material-ui/icons/Navigation";
 import AddExercise from "./add-exercise";
 import CloseIcon from "@material-ui/icons/Close";
 import NavigationIcon from "@material-ui/icons/Navigation";
@@ -46,6 +48,7 @@ function Exercise(props) {
     },
   }));
   const [selectedDate, handleDateChange] = useState(new Date());
+
   const session = {
     date: selectedDate,
     start: "some",
@@ -55,6 +58,7 @@ function Exercise(props) {
 
   const [activity, setActivity] = useState({});
   const [workout, setWorkout] = useState(session);
+
   const classes = useStyles();
   const { authUser, firebase } = props;
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -255,6 +259,16 @@ function Exercise(props) {
           </IconButton>
         </Drawer>
       </Grid>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <>
+          <WorkoutBoard activity={activity} workout={workout} />
+        </>
+      </Modal>
 
       <>
         <Fab variant="extended" onClick={viewWorkout}>
