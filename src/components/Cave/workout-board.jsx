@@ -13,13 +13,7 @@ import Icon from "@mdi/react";
 
 export default function WorkoutBuild(props) {
   return (
-    <div style={modalStyle} className={classes.paper}>
-      <>
-        {console.log("LOG ACTIVITY")}
-        {console.log(props.activity)}
-        {console.log("LOG WORKOUT")}
-        {console.log(props.workout)}
-      </>
+    <div>
       <h1>Plan for</h1>
       {props.workout.activities === "not set" ||
       props.workout.activities === null ? (
@@ -32,7 +26,7 @@ export default function WorkoutBuild(props) {
                 let { name } = activity;
                 if (name !== undefined) {
                   let ico = "";
-                  switch (group) {
+                  switch (name) {
                     case "weights":
                       ico = mdiWeightLifter;
                       break;

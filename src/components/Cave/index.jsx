@@ -22,9 +22,7 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import NavigationIcon from "@material-ui/icons/Navigation";
 import AddExercise from "./add-exercise";
-import CloseIcon from "@material-ui/icons/Close";
-import NavigationIcon from "@material-ui/icons/Navigation";
-// import WorkoutBoard from "./workout-board";
+import WorkoutBoard from "./workout-board";
 import ExerciseSelect from "./exercise-select";
 import ControlPointOutlinedIcon from "@material-ui/icons/ControlPointOutlined";
 import RenderSwitch from "./render-switch";
