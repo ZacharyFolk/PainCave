@@ -51,29 +51,6 @@ class Firebase {
         // console.log(workout);
     } 
 
-    fetchExercise = (uid, type) => {
-        const ref = this.db.ref()
-        .child(`users/${uid}/exercises/groups/${type}/`);
-      var exerciseArray= [];
-  
-      ref.on("value", (snapshot) => {
-        if (snapshot && snapshot.exists()) {
-          snapshot.forEach((data) => {
-            const dataVal = data.val();
-   
-            exerciseArray.push(dataVal)
-             
-          });
- 
-        }
-      });
-      console.log('(exerciseArray) from firebase :');
-      console.log(exerciseArray);
-      exerciseArray.forEach(element => console.log(element));
-
-      return(exerciseArray);
-    }
-
 }
 
 export default Firebase;

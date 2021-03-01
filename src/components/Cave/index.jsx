@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
 import {
-  CssBaseline,
-  Paper,
   makeStyles,
   Modal,
   Grid,
@@ -11,31 +9,25 @@ import {
   Drawer,
   Button,
   Fab,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
 } from "@material-ui/core/";
-import NavigationIcon from "@material-ui/icons/Navigation";
-
-import FormControl from "@material-ui/core/FormControl";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import AddExercise from "./add-exercise";
-import useStyles from "../../config/theme.exercise";
-import ActivityBuilder from "./activity-builder";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
+import NavigationIcon from "@material-ui/icons/Navigation";
 // import WorkoutBoard from "./workout-board";
 import ExerciseSelect from "./exercise-select";
-// import ExerciseList from "./exercise-list";
-import { ListItemText, ListItemSecondaryAction } from "@material-ui/core/";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import ControlPointOutlinedIcon from "@material-ui/icons/ControlPointOutlined";
 import RenderSwitch from "./render-switch";
 
 function Exercise(props) {
-  let defaultDate = useState(new Date().getFullYear());
   const useStyles = makeStyles((theme) => ({
     paper: {
       position: "absolute",
@@ -54,19 +46,6 @@ function Exercise(props) {
     },
   }));
   const [selectedDate, handleDateChange] = useState(new Date());
-
-  const defaultActivity = {
-    id: null,
-    title: "",
-    group: "",
-    distance: 0,
-    duration: 0,
-    reps: 0,
-    sets: 0,
-    type: 1,
-    weight: 0,
-  };
-
   const session = {
     date: selectedDate,
     start: "some",
@@ -76,20 +55,14 @@ function Exercise(props) {
 
   const [activity, setActivity] = useState({});
   const [workout, setWorkout] = useState(session);
-  const [selectLabel, setLabel] = useState("Choose a type");
-
   const classes = useStyles();
   const { authUser, firebase } = props;
-  const uid = authUser.uid;
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState(null);
-  const [exercises, setExercises] = useState(true);
-  const [loading, setLoading] = useState([]);
   const [drawer, setDrawerState] = useState(false);
   const [exerciseTitle, setExerciseTitle] = useState("");
   const [open, setOpen] = React.useState(false);
 
-  const [exType, setExerciseType] = useState("");
   const [exerciseList, setList] = useState([]);
   function rand() {
     return Math.round(Math.random() * 20) - 10;
@@ -129,18 +102,9 @@ function Exercise(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  // useEffect(() => {
-  //   console.log("Index rendered");
-  //   console.log("From Index (exType) : " + exType);
-  //   console.log("============ INDEX STATE OF ACTIVITY ================");
-  //   console.log(activity);
-  // }, []);
 
   useEffect(() => {
-    // console.log("Activity value changed");
-    // console.log(activity);
-    // console.log(activity.group);
-    if (activity.group != "undefined") {
+    if (activity.group !== "undefined") {
       CreateExerciseList();
     }
   }, [activity]);
@@ -149,7 +113,7 @@ function Exercise(props) {
     return <ListItem button component="a" {...props} />;
   }
 
-  function CreateExerciseList() {
+  const CreateExerciseList = () => {
     let ref = firebase.db
       .ref()
       .child(`users/${authUser.uid}/exercises/groups/${activity.group}/`);
@@ -187,11 +151,10 @@ function Exercise(props) {
           );
         });
         exerciseArray.push(modalFooter);
-        console.log(exerciseArray);
         setList(exerciseArray);
       }
     });
-  }
+  };
 
   const openExerciseOptions = (e) => {
     setExerciseTitle(e.currentTarget.value);
@@ -227,20 +190,14 @@ function Exercise(props) {
   };
 
   function addToWorkout() {
-    console.log("Activity when add to workout");
-    console.log(activity);
-
     setWorkout({
       ...workout,
       activities: [...workout.activities, activity],
     });
     resetObject(workout);
   }
+
   function viewWorkout() {
-    console.log("======================(exerciseList)======================");
-    console.log(exerciseList);
-    console.log("======================(activity)======================");
-    console.log(activity);
     console.log("======================(workout)======================");
     console.log(workout);
   }
@@ -283,24 +240,6 @@ function Exercise(props) {
           >
             {exerciseDetails}
           </Modal>
-          {/* <ActivityBuilder
-            exercises={exercises}
-            authUser={props.authUser}
-            activity={activity}
-            defaultActivity={defaultActivity}
-            setActivity={setActivity}
-            selectedDate={selectedDate}
-            handleDateChange={handleDateChange}
-            handleDrawerToggle={handleDrawerToggle}
-            workout={workout}
-            setWorkout={setWorkout}
-            selectLabel={selectLabel}
-            setLabel={setLabel}
-            // setSliderValue={setSliderValue}
-            // sliderValue={sliderValue}
-          /> */}
-          {/* <p>Test Submit </p>
-          <AddCircleIcon onClick={handleSubmit} /> */}
         </Grid>
         <Drawer anchor="right" open={drawer}>
           <AddExercise
